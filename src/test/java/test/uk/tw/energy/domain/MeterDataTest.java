@@ -13,17 +13,32 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class MeterDataTest {
 
+    private ElectricityReading beginningOfDayReading =
+            new ElectricityReading(Instant.ofEpochSecond(1504051200), BigDecimal.valueOf(1000.000));
+    private ElectricityReading middleOfDayReading =
+            new ElectricityReading(Instant.ofEpochSecond(1504094400), BigDecimal.valueOf(1006.000));
+    private ElectricityReading endOfDayReading =
+            new ElectricityReading(Instant.ofEpochSecond(1504137600), BigDecimal.valueOf(1012.000));
+
     @Test
-    public void getConsumptionCalculatesDifferenceBetweenFirstAndLastReading() {
-        Instant beginningOfDay = Instant.ofEpochMilli(1504134000);
-        Instant beginningOfFollowingDay = Instant.ofEpochMilli(1504137600);
-        ElectricityReading firstReading = new ElectricityReading(beginningOfDay, BigDecimal.valueOf(1000.000));
-        ElectricityReading lastReading = new ElectricityReading(beginningOfFollowingDay, BigDecimal.valueOf(1012.000));
+    public void getConsumptionCalculatesConsumptionBetweenTwoReadings() {
         List<ElectricityReading> electricityReadings = new ArrayList<>();
-        electricityReadings.add(firstReading);
-        electricityReadings.add(lastReading);
+        electricityReadings.add(beginningOfDayReading);
+        electricityReadings.add(endOfDayReading);
+
         MeterData meterData = new MeterData(electricityReadings);
 
-        assertThat(meterData.getConsumption()).isEqualTo(new BigDecimal("12"));
+        assertThat(meterData.getConsumption()).isEqualByComparingTo(BigDecimal.valueOf(12));
+    }
+
+    @Test
+    public void getConsumptionCalculatesConsumptionForOutOfOrderReadings() {
+        List<ElectricityReading> electricityReadings = new ArrayList<>();
+        electricityReadings.add(beginningOfDayReading);
+        electricityReadings.add(endOfDayReading);
+        electricityReadings.add(middleOfDayReading);
+        MeterData meterData = new MeterData(electricityReadings);
+
+        assertThat(meterData.getConsumption()).isEqualByComparingTo(BigDecimal.valueOf(12));
     }
 }

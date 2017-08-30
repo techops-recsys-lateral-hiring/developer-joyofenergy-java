@@ -15,4 +15,8 @@ public class ElectricityReading {
     public BigDecimal getReading() {
         return reading;
     }
+
+    public Instant getTime() {
+        return time;
+    }
 }
