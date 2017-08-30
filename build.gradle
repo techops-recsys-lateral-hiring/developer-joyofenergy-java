@@ -1,7 +1,8 @@
 apply plugin: 'java'
-
+apply plugin: 'idea'
 // Apply the application plugin to add support for building an application
 apply plugin: 'application'
+apply from: 'gradle/service-test.gradle'
 
 // In this section you declare where to find the dependencies of your project
 repositories {
@@ -17,7 +18,8 @@ task wrapper(type: Wrapper) {
 }
 dependencies {
     compile 'com.google.guava:guava:23.0',
-            'org.springframework.boot:spring-boot-starter-web:2.0.0.M3'
+            'org.springframework.boot:spring-boot-starter-web:2.0.0.M3',
+            'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
     testCompile 'junit:junit:4.12',
             'org.assertj:assertj-core:3.8.0',
             'org.springframework.boot:spring-boot-starter-test:2.0.0.M3'
