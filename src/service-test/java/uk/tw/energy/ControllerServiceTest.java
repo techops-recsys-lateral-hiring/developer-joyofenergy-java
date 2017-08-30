@@ -26,7 +26,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = App.class)
 public class ControllerServiceTest {
 
-    private final String CALCULATE_ENDPOINT = "/calculateCost";
+    private static final String CALCULATE_ENDPOINT = "/calculateCost";
+
     @Autowired
     private TestRestTemplate restTemplate;
     @Autowired

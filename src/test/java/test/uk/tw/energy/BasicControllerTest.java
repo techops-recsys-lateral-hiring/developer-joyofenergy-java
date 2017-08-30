@@ -29,15 +29,17 @@ public class BasicControllerTest {
     @Spy
     private TariffService tariffService = new TariffService(singletonList(new Tariff("testSupplier", BigDecimal.ONE)));
 
-    BasicController victim = new BasicController(costService, tariffService);
+    private BasicController controller = new BasicController(costService, tariffService);
 
 
     @Test
     public void shouldCallCostService() {
         ElectricityReading reading = new ElectricityReading(Instant.now(), BigDecimal.ONE);
         MeterData meterData = new MeterData(nCopies(2, reading));
-        ResponseEntity<List<BigDecimal>> responseEntity = victim.calculateCostEndpoint(
+
+        ResponseEntity<List<BigDecimal>> responseEntity = controller.calculateCostEndpoint(
                 meterData);
+
         assertThat(responseEntity.getBody()).contains(new BigDecimal(0));
     }
 }

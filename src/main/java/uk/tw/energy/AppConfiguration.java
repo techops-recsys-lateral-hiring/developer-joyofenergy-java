@@ -14,6 +14,7 @@ import java.util.List;
 import static java.util.Collections.singletonList;
 
 @Configuration
+@SuppressWarnings("unused")
 public class AppConfiguration {
     @Bean
     public List<Tariff> tariffList(){
