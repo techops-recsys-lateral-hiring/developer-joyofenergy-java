@@ -15,6 +15,7 @@ public class MeterData {
     public MeterData(List<ElectricityReading> electricityReadings) {
         this.electricityReadings = electricityReadings;
     }
+
     @JsonIgnore
     public BigDecimal getConsumption() {
         ElectricityReading first = electricityReadings.stream().min(Comparator.comparing(ElectricityReading::getTime)).get();

@@ -1,11 +1,11 @@
-package test.uk.tw.energy;
+package test.uk.tw.energy.controller;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.ResponseEntity;
-import uk.tw.energy.BasicController;
+import uk.tw.energy.controller.TariffComparatorController;
 import uk.tw.energy.domain.ElectricityReading;
 import uk.tw.energy.domain.MeterData;
 import uk.tw.energy.domain.Tariff;
@@ -22,14 +22,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 @RunWith(MockitoJUnitRunner.class)
-public class BasicControllerTest {
+public class TariffComparatorControllerTest {
 
     @Spy
     private CostService costService = new CostService();
     @Spy
     private TariffService tariffService = new TariffService(singletonList(new Tariff("testSupplier", BigDecimal.ONE, null)));
 
-    private BasicController controller = new BasicController(costService, tariffService);
+    private TariffComparatorController controller = new TariffComparatorController(costService, tariffService);
 
 
     @Test

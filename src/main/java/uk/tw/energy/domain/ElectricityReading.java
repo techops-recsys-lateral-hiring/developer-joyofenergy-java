@@ -4,13 +4,13 @@ import java.math.BigDecimal;
 import java.time.Instant;
 
 public class ElectricityReading {
-    private  Instant time;
+
+    private Instant time;
     private BigDecimal reading; // kWh
 
-    public ElectricityReading(){
+    public ElectricityReading() { }
 
-    }
-    public ElectricityReading(Instant time, BigDecimal reading){
+    public ElectricityReading(Instant time, BigDecimal reading) {
         this.time = time;
         this.reading = reading;
     }

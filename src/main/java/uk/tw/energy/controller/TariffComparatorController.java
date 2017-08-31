@@ -1,4 +1,4 @@
-package uk.tw.energy;
+package uk.tw.energy.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,23 +13,24 @@ import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
-@RestController
 
-public class BasicController {
+@RestController
+public class TariffComparatorController {
+
     private final CostService costService;
     private final TariffService tariffService;
 
-    public BasicController(CostService costService, TariffService tariffService) {
-
+    public TariffComparatorController(CostService costService, TariffService tariffService) {
         this.costService = costService;
         this.tariffService = tariffService;
     }
+
     @PostMapping("/calculateCost")
     public ResponseEntity<List<BigDecimal>> calculateCostEndpoint(@RequestBody MeterData meterData) {
         Collection<Tariff> tariffList = tariffService.findAll();
         List<BigDecimal> collect = tariffList.stream().map(tariff -> costService.calculateCost(meterData, tariff))
                 .collect(Collectors.toList());
         return ResponseEntity.ok(collect);
-
     }
+
 }
