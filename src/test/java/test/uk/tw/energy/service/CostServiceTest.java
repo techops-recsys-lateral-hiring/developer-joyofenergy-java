@@ -31,7 +31,7 @@ public class CostServiceTest {
         List<ElectricityReading> electricityReadings = new ArrayList<>();
         electricityReadings.add(beginningOfDayReading);
         electricityReadings.add(endOfDayReading);
-        MeterData meterData = new MeterData(electricityReadings);
+        MeterData meterData = new MeterData("rita", electricityReadings);
 
         BigDecimal cost = costService.calculateCost(meterData, tariff);
 

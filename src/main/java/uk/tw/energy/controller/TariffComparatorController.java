@@ -1,9 +1,7 @@
 package uk.tw.energy.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import uk.tw.energy.domain.MeterData;
 import uk.tw.energy.domain.Tariff;
 import uk.tw.energy.service.CostService;
@@ -25,7 +23,7 @@ public class TariffComparatorController {
         this.tariffService = tariffService;
     }
 
-    @PostMapping("/calculateCost")
+    @PostMapping("/tariffs/compare-all")
     public ResponseEntity<List<BigDecimal>> calculateCostEndpoint(@RequestBody MeterData meterData) {
         Collection<Tariff> tariffList = tariffService.findAll();
         List<BigDecimal> collect = tariffList.stream().map(tariff -> costService.calculateCost(meterData, tariff))

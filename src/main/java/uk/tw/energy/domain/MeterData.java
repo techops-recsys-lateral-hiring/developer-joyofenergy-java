@@ -7,13 +7,17 @@ import java.util.Comparator;
 import java.util.List;
 
 public class MeterData {
+
     private List<ElectricityReading> electricityReadings;
+    private String userId;
 
-    protected MeterData() {
-    }
+    public MeterData() { }
 
-    public MeterData(List<ElectricityReading> electricityReadings) {
+    public MeterData(String userId, List<ElectricityReading> electricityReadings) {
+
+        this.userId = userId;
         this.electricityReadings = electricityReadings;
+
     }
 
     @JsonIgnore
@@ -25,5 +29,9 @@ public class MeterData {
 
     public List<ElectricityReading> getElectricityReadings() {
         return electricityReadings;
+    }
+
+    public String getUserId() {
+        return userId;
     }
 }

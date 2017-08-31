@@ -35,7 +35,7 @@ public class TariffComparatorControllerTest {
     @Test
     public void shouldCallCostService() {
         ElectricityReading reading = new ElectricityReading(Instant.now(), BigDecimal.ONE);
-        MeterData meterData = new MeterData(nCopies(2, reading));
+        MeterData meterData = new MeterData("bob", nCopies(2, reading));
 
         ResponseEntity<List<BigDecimal>> responseEntity = controller.calculateCostEndpoint(
                 meterData);

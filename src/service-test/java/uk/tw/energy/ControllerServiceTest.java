@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
@@ -26,7 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = App.class)
 public class ControllerServiceTest {
 
-    private static final String CALCULATE_ENDPOINT = "/calculateCost";
+    private static final String CALCULATE_ENDPOINT = "/tariffs/compare-all";
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -36,14 +37,18 @@ public class ControllerServiceTest {
     @Test
     public void shouldCalculateAllPrices() throws JsonProcessingException {
         ElectricityReading reading = new ElectricityReading(Instant.now(), BigDecimal.ONE);
-        MeterData meterData = new MeterData(nCopies(2, reading));
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        String jsonMeterData = mapper.writeValueAsString(meterData);
-        HttpEntity<String> entity = new HttpEntity(jsonMeterData,headers);
+        MeterData meterData = new MeterData("bob", nCopies(2, reading));
+        HttpEntity<String> entity = getStringHttpEntity(meterData);
 
         ResponseEntity<String> response = restTemplate.postForEntity(CALCULATE_ENDPOINT, entity, String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    private HttpEntity<String> getStringHttpEntity(Object object) throws JsonProcessingException {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        String jsonMeterData = mapper.writeValueAsString(object);
+        return (HttpEntity<String>) new HttpEntity(jsonMeterData,headers);
     }
 }

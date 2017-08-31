@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import uk.tw.energy.domain.Tariff;
+import uk.tw.energy.service.MeterReadingService;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -21,6 +22,7 @@ public class AppConfiguration {
     public List<Tariff> tariffList(){
        return singletonList(new Tariff("testSupplier", BigDecimal.ONE, emptyList()));
     }
+
 
     @Bean
     @Primary

@@ -26,7 +26,7 @@ public class MeterDataTest {
         electricityReadings.add(beginningOfDayReading);
         electricityReadings.add(endOfDayReading);
 
-        MeterData meterData = new MeterData(electricityReadings);
+        MeterData meterData = new MeterData("rita", electricityReadings);
 
         assertThat(meterData.getConsumption()).isEqualByComparingTo(BigDecimal.valueOf(12));
     }
@@ -37,7 +37,7 @@ public class MeterDataTest {
         electricityReadings.add(beginningOfDayReading);
         electricityReadings.add(endOfDayReading);
         electricityReadings.add(middleOfDayReading);
-        MeterData meterData = new MeterData(electricityReadings);
+        MeterData meterData = new MeterData("sue", electricityReadings);
 
         assertThat(meterData.getConsumption()).isEqualByComparingTo(BigDecimal.valueOf(12));
     }
