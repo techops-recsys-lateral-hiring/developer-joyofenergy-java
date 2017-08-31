@@ -11,6 +11,7 @@ import uk.tw.energy.domain.Tariff;
 import java.math.BigDecimal;
 import java.util.List;
 
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
 @Configuration
@@ -18,7 +19,7 @@ import static java.util.Collections.singletonList;
 public class AppConfiguration {
     @Bean
     public List<Tariff> tariffList(){
-       return singletonList(new Tariff("testSupplier", BigDecimal.ONE));
+       return singletonList(new Tariff("testSupplier", BigDecimal.ONE, emptyList()));
     }
 
     @Bean

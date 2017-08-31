@@ -27,7 +27,7 @@ public class BasicControllerTest {
     @Spy
     private CostService costService = new CostService();
     @Spy
-    private TariffService tariffService = new TariffService(singletonList(new Tariff("testSupplier", BigDecimal.ONE)));
+    private TariffService tariffService = new TariffService(singletonList(new Tariff("testSupplier", BigDecimal.ONE, null)));
 
     private BasicController controller = new BasicController(costService, tariffService);
 

@@ -9,6 +9,7 @@ import uk.tw.energy.service.CostService;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -25,7 +26,7 @@ public class CostServiceTest {
     @Test
     public void getCostReturnsCostForMeterReadingOnTariff() {
         BigDecimal unitRate = BigDecimal.valueOf(0.20);
-        Tariff tariff = new Tariff("Elmo's Excellent Electricity", unitRate);
+        Tariff tariff = new Tariff("Elmo's Excellent Electricity", unitRate, Collections.emptyList());
 
         List<ElectricityReading> electricityReadings = new ArrayList<>();
         electricityReadings.add(beginningOfDayReading);
