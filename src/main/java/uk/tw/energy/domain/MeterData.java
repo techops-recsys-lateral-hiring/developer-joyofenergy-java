@@ -9,13 +9,13 @@ import java.util.List;
 public class MeterData {
 
     private List<ElectricityReading> electricityReadings;
-    private String userId;
+    private String meterId;
 
     public MeterData() { }
 
-    public MeterData(String userId, List<ElectricityReading> electricityReadings) {
+    public MeterData(String meterId, List<ElectricityReading> electricityReadings) {
 
-        this.userId = userId;
+        this.meterId = meterId;
         this.electricityReadings = electricityReadings;
 
     }
@@ -31,7 +31,7 @@ public class MeterData {
         return electricityReadings;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getMeterId() {
+        return meterId;
     }
 }

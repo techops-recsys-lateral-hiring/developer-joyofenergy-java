@@ -21,7 +21,7 @@ public class MeterReadingService {
 
     public void storeReadings(MeterData meterData) {
 
-        userAssociatedElectricityReadings.putAll(meterData.getUserId(), meterData.getElectricityReadings());
+        userAssociatedElectricityReadings.putAll(meterData.getMeterId(), meterData.getElectricityReadings());
 
     }
 
