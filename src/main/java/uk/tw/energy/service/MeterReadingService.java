@@ -1,27 +1,33 @@
 package uk.tw.energy.service;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.ListMultimap;
 import org.springframework.stereotype.Service;
 import uk.tw.energy.domain.ElectricityReading;
 import uk.tw.energy.domain.MeterData;
 
-import java.util.List;
+import java.util.*;
 
 @Service
 public class MeterReadingService {
 
-    private ListMultimap<String, ElectricityReading> userAssociatedElectricityReadings = ArrayListMultimap.create();
+    private Map<String, List<ElectricityReading>> meterAssociatedReadings = new HashMap<>();
 
-    public List<ElectricityReading> getReadings(String userId) {
+    public Optional<List<ElectricityReading>> getReadings(String meterId) {
 
-        return userAssociatedElectricityReadings.get(userId);
+        return Optional.ofNullable(meterAssociatedReadings.get(meterId));
 
     }
 
     public void storeReadings(MeterData meterData) {
 
-        userAssociatedElectricityReadings.putAll(meterData.getMeterId(), meterData.getElectricityReadings());
+        String meterId = meterData.getMeterId();
+
+        if ( !meterAssociatedReadings.containsKey(meterId) ) {
+
+            meterAssociatedReadings.put(meterId, new ArrayList<>());
+
+        }
+
+        meterAssociatedReadings.get(meterId).addAll(meterData.getElectricityReadings());
 
     }
 

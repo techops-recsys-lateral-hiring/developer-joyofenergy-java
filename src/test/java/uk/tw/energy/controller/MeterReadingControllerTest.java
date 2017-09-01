@@ -5,7 +5,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
-import uk.tw.energy.controller.MeterReadingController;
 import uk.tw.energy.domain.ElectricityReading;
 import uk.tw.energy.domain.MeterData;
 import uk.tw.energy.service.MeterReadingService;
@@ -23,7 +22,7 @@ public class MeterReadingControllerTest {
 
     private MeterReadingController meterReadingController;
     private MeterReadingService meterReadingService;
-    private String userId = "bob";
+    private String meterId = "10101010";
 
     @Before
     public void setUp() {
@@ -46,14 +45,14 @@ public class MeterReadingControllerTest {
 
         ElectricityReading firstReading = new ElectricityReading(Instant.now(), BigDecimal.ONE);
         ElectricityReading secondReading = new ElectricityReading(Instant.now(), BigDecimal.TEN);
-        MeterData meterData = new MeterData(userId, Arrays.asList(firstReading));
-        MeterData otherMeterDataBatch = new MeterData(userId, Arrays.asList(secondReading));
+        MeterData meterData = new MeterData(meterId, Arrays.asList(firstReading));
+        MeterData otherMeterDataBatch = new MeterData(meterId, Arrays.asList(secondReading));
 
         meterReadingController.storeReadings(meterData);
         meterReadingController.storeReadings(otherMeterDataBatch);
 
         List<ElectricityReading> expectedElectricityReadings = Arrays.asList(firstReading, secondReading);
-        assertThat(meterReadingService.getReadings(userId)).isEqualTo(expectedElectricityReadings);
+        assertThat(meterReadingService.getReadings(meterId).get()).isEqualTo(expectedElectricityReadings);
 
     }
 
@@ -61,14 +60,33 @@ public class MeterReadingControllerTest {
     public void givenMeterReadingsAssociatedWithTheUserShouldStoreAssociatedWithUser() {
 
         List<ElectricityReading> electricityReadingList = Arrays.asList(new ElectricityReading(Instant.now(), BigDecimal.ONE));
-        MeterData meterData = new MeterData(userId, electricityReadingList);
+        MeterData meterData = new MeterData(meterId, electricityReadingList);
         meterReadingController.storeReadings(meterData);
 
         List<ElectricityReading> otherElectricityReadingList = Arrays.asList(new ElectricityReading(Instant.now(), BigDecimal.TEN));
         MeterData otherMeterData = new MeterData("rita", otherElectricityReadingList);
         meterReadingController.storeReadings(otherMeterData);
 
-        assertThat(meterReadingService.getReadings(userId)).isEqualTo(electricityReadingList);
+        assertThat(meterReadingService.getReadings(meterId).get()).isEqualTo(electricityReadingList);
+
+    }
+
+    @Test
+    public void givenMeterIdShouldReturnAMeterReadingAssociatedWithMeterId() {
+
+        List<ElectricityReading> otherElectricityReadingList = Arrays.asList(new ElectricityReading(Instant.now(), BigDecimal.TEN));
+        MeterData otherMeterData = new MeterData(meterId, otherElectricityReadingList);
+
+        meterReadingController.storeReadings(otherMeterData);
+
+        assertThat(meterReadingController.readReadings(meterId).getBody()).isEqualTo(otherElectricityReadingList);
+
+    }
+
+    @Test
+    public void givenMeterIdThatIsNotRecognisedShouldReturnNotFound() {
+
+        assertThat(meterReadingController.readReadings(meterId).getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
     }
 

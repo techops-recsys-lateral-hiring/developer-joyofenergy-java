@@ -26,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = App.class)
-public class ControllerServiceTest {
+public class EndpointTest {
 
     private static final String CALCULATE_ENDPOINT = "/tariffs/compare-all";
 
@@ -61,6 +61,20 @@ public class ControllerServiceTest {
         HttpEntity<String> entity = getStringHttpEntity(meterData);
 
         ResponseEntity<String> response = restTemplate.postForEntity("/readings/store", entity, String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+    }
+
+    @Test
+    public void givenMeterIdShouldReturnAMeterReadingAssociatedWithMeterId() throws JsonProcessingException {
+
+        ElectricityReading reading = new ElectricityReading(Instant.now(), BigDecimal.ONE);
+        MeterData meterData = new MeterData("bob", nCopies(2, reading));
+        HttpEntity<String> entity = getStringHttpEntity(meterData);
+        restTemplate.postForEntity("/readings/store", entity, String.class);
+
+        ResponseEntity<String> response = restTemplate.getForEntity("/readings/read/bob", String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
