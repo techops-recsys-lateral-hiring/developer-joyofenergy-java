@@ -1,4 +1,4 @@
-package test.uk.tw.energy.domain;
+package uk.tw.energy.domain;
 
 import org.junit.Test;
 import uk.tw.energy.domain.ElectricityReading;
