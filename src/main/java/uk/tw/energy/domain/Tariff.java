@@ -27,6 +27,10 @@ public class Tariff {
         return exceptionalTariff.map(tariff -> unitRate.multiply(tariff.multiplier)).orElse(unitRate);
     }
 
+    public String getSupplier() {
+        return supplier;
+    }
+
     static class ExceptionalTariff {
 
         DayOfWeek dayOfWeek;

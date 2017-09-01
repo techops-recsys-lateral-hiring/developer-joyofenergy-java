@@ -1,44 +1,60 @@
 package uk.tw.energy.controller;
 
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Spy;
-import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.http.ResponseEntity;
 import uk.tw.energy.domain.ElectricityReading;
-import uk.tw.energy.domain.MeterReadings;
 import uk.tw.energy.domain.Tariff;
 import uk.tw.energy.service.CostService;
+import uk.tw.energy.service.MeterReadingService;
 import uk.tw.energy.service.TariffService;
-
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.util.List;
+import java.util.*;
 
-import static java.util.Collections.nCopies;
-import static java.util.Collections.singletonList;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-
-@RunWith(MockitoJUnitRunner.class)
 public class TariffComparatorControllerTest {
 
-    @Spy
-    private CostService costService = new CostService();
-    @Spy
-    private TariffService tariffService = new TariffService(singletonList(new Tariff("testSupplier", BigDecimal.ONE, null)));
+    private CostService costService;
 
-    private TariffComparatorController controller = new TariffComparatorController(costService, tariffService);
+    private TariffService tariffService;
+
+    private TariffComparatorController controller;
+    private MeterReadingService meterReadingService;
+
+    private String tariffName = "test-supplier";
+    private String otherTariffName = "best-supplier";
+
+    @Before
+    public void setUp() {
+
+        costService = new CostService();
+        meterReadingService = new MeterReadingService();
+
+        Tariff tariff = new Tariff(tariffName, BigDecimal.TEN, null);
+        Tariff otherTariff = new Tariff(otherTariffName, BigDecimal.ONE, null);
+
+        List<Tariff> tariffs = Arrays.asList(tariff, otherTariff);
+        tariffService = new TariffService(tariffs, meterReadingService);
+        controller = new TariffComparatorController(costService, tariffService);
+
+    }
 
 
     @Test
-    public void shouldCallCostService() {
-        ElectricityReading reading = new ElectricityReading(Instant.now(), BigDecimal.ONE);
-        MeterReadings meterReadings = new MeterReadings("bob", nCopies(2, reading));
+    public void shouldCalculateCostForMeterReadingsForEveryTariff() {
 
-        ResponseEntity<List<BigDecimal>> responseEntity = controller.calculateCostEndpoint(
-                meterReadings);
+        Map<String, BigDecimal> tariffToCost = new HashMap<>();
+        tariffToCost.put(tariffName, BigDecimal.valueOf(100));
+        tariffToCost.put(otherTariffName, BigDecimal.valueOf(10));
 
-        assertThat(responseEntity.getBody()).contains(new BigDecimal(0));
+        String meterId = "meter-id";
+        ElectricityReading electricityReading = new ElectricityReading(Instant.now().minusSeconds(3600), BigDecimal.valueOf(15.0));
+        ElectricityReading otherReading = new ElectricityReading(Instant.now(), BigDecimal.valueOf(5.0));
+        meterReadingService.storeReadings(meterId, Arrays.asList(electricityReading, otherReading));
+
+        assertThat(controller.calculatedCostForEachTariff(meterId).getBody()).isEqualTo(tariffToCost);
+
     }
+
 }

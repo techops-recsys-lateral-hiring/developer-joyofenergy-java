@@ -26,7 +26,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = App.class)
 public class EndpointTest {
 
-    private static final String CALCULATE_ENDPOINT = "/tariffs/compare-all";
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -39,7 +38,7 @@ public class EndpointTest {
         MeterReadings meterReadings = new MeterReadings("bob", nCopies(2, reading));
         HttpEntity<String> entity = getStringHttpEntity(meterReadings);
 
-        ResponseEntity<String> response = restTemplate.postForEntity(CALCULATE_ENDPOINT, entity, String.class);
+        ResponseEntity<String> response = restTemplate.postForEntity("/tariffs/compare-all", entity, String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
