@@ -52,4 +52,19 @@ public class ControllerServiceTest {
         String jsonMeterData = mapper.writeValueAsString(object);
         return (HttpEntity<String>) new HttpEntity(jsonMeterData,headers);
     }
+
+    @Test
+    public void shouldStoreReadings() throws JsonProcessingException {
+
+        ElectricityReading reading = new ElectricityReading(Instant.now(), BigDecimal.ONE);
+        MeterData meterData = new MeterData("bob", nCopies(2, reading));
+        HttpEntity<String> entity = getStringHttpEntity(meterData);
+
+        ResponseEntity<String> response = restTemplate.postForEntity("/readings/store", entity, String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+    }
+
+
 }

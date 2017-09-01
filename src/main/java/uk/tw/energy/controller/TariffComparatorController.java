@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@RequestMapping("/tariffs")
 public class TariffComparatorController {
 
     private final CostService costService;
@@ -23,7 +24,7 @@ public class TariffComparatorController {
         this.tariffService = tariffService;
     }
 
-    @PostMapping("/tariffs/compare-all")
+    @PostMapping("/compare-all")
     public ResponseEntity<List<BigDecimal>> calculateCostEndpoint(@RequestBody MeterData meterData) {
         Collection<Tariff> tariffList = tariffService.findAll();
         List<BigDecimal> collect = tariffList.stream().map(tariff -> costService.calculateCost(meterData, tariff))

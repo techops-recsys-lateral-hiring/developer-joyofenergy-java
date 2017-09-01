@@ -18,11 +18,11 @@ import static java.util.Collections.singletonList;
 @Configuration
 @SuppressWarnings("unused")
 public class AppConfiguration {
+
     @Bean
     public List<Tariff> tariffList(){
        return singletonList(new Tariff("testSupplier", BigDecimal.ONE, emptyList()));
     }
-
 
     @Bean
     @Primary
@@ -31,4 +31,5 @@ public class AppConfiguration {
         objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
         return objectMapper;
     }
+
 }
