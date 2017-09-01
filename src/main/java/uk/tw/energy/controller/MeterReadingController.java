@@ -3,7 +3,7 @@ package uk.tw.energy.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uk.tw.energy.domain.ElectricityReading;
-import uk.tw.energy.domain.MeterData;
+import uk.tw.energy.domain.MeterReadings;
 import uk.tw.energy.service.MeterReadingService;
 
 import java.util.List;
@@ -22,15 +22,15 @@ public class MeterReadingController {
     }
 
     @PostMapping("/store")
-    public ResponseEntity storeReadings(@RequestBody  MeterData meterData) {
+    public ResponseEntity storeReadings(@RequestBody MeterReadings meterReadings) {
 
-        meterReadingService.storeReadings(meterData);
+        meterReadingService.storeReadings(meterReadings.getMeterId(), meterReadings.getElectricityReadings());
         return ResponseEntity.ok().build();
 
     }
 
     @GetMapping("/read/{meterId}")
-    public ResponseEntity readReadings(String meterId) {
+    public ResponseEntity readReadings(@PathVariable String meterId) {
 
         Optional<List<ElectricityReading>> readings = meterReadingService.getReadings(meterId);
 

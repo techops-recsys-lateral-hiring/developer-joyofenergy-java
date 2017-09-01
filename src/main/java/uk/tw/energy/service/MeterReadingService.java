@@ -2,7 +2,6 @@ package uk.tw.energy.service;
 
 import org.springframework.stereotype.Service;
 import uk.tw.energy.domain.ElectricityReading;
-import uk.tw.energy.domain.MeterData;
 
 import java.util.*;
 
@@ -17,9 +16,7 @@ public class MeterReadingService {
 
     }
 
-    public void storeReadings(MeterData meterData) {
-
-        String meterId = meterData.getMeterId();
+    public void storeReadings(String meterId, List<ElectricityReading> electricityReadings) {
 
         if ( !meterAssociatedReadings.containsKey(meterId) ) {
 
@@ -27,7 +24,7 @@ public class MeterReadingService {
 
         }
 
-        meterAssociatedReadings.get(meterId).addAll(meterData.getElectricityReadings());
+        meterAssociatedReadings.get(meterId).addAll(electricityReadings);
 
     }
 

@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
@@ -14,9 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
-import uk.tw.energy.App;
 import uk.tw.energy.domain.ElectricityReading;
-import uk.tw.energy.domain.MeterData;
+import uk.tw.energy.domain.MeterReadings;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -38,8 +36,8 @@ public class EndpointTest {
     @Test
     public void shouldCalculateAllPrices() throws JsonProcessingException {
         ElectricityReading reading = new ElectricityReading(Instant.now(), BigDecimal.ONE);
-        MeterData meterData = new MeterData("bob", nCopies(2, reading));
-        HttpEntity<String> entity = getStringHttpEntity(meterData);
+        MeterReadings meterReadings = new MeterReadings("bob", nCopies(2, reading));
+        HttpEntity<String> entity = getStringHttpEntity(meterReadings);
 
         ResponseEntity<String> response = restTemplate.postForEntity(CALCULATE_ENDPOINT, entity, String.class);
 
@@ -57,8 +55,8 @@ public class EndpointTest {
     public void shouldStoreReadings() throws JsonProcessingException {
 
         ElectricityReading reading = new ElectricityReading(Instant.now(), BigDecimal.ONE);
-        MeterData meterData = new MeterData("bob", nCopies(2, reading));
-        HttpEntity<String> entity = getStringHttpEntity(meterData);
+        MeterReadings meterReadings = new MeterReadings("bob", nCopies(2, reading));
+        HttpEntity<String> entity = getStringHttpEntity(meterReadings);
 
         ResponseEntity<String> response = restTemplate.postForEntity("/readings/store", entity, String.class);
 
@@ -70,8 +68,8 @@ public class EndpointTest {
     public void givenMeterIdShouldReturnAMeterReadingAssociatedWithMeterId() throws JsonProcessingException {
 
         ElectricityReading reading = new ElectricityReading(Instant.now(), BigDecimal.ONE);
-        MeterData meterData = new MeterData("bob", nCopies(2, reading));
-        HttpEntity<String> entity = getStringHttpEntity(meterData);
+        MeterReadings meterReadings = new MeterReadings("bob", nCopies(2, reading));
+        HttpEntity<String> entity = getStringHttpEntity(meterReadings);
         restTemplate.postForEntity("/readings/store", entity, String.class);
 
         ResponseEntity<String> response = restTemplate.getForEntity("/readings/read/bob", String.class);

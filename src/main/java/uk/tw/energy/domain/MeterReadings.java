@@ -6,14 +6,14 @@ import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.List;
 
-public class MeterData {
+public class MeterReadings {
 
     private List<ElectricityReading> electricityReadings;
     private String meterId;
 
-    public MeterData() { }
+    public MeterReadings() { }
 
-    public MeterData(String meterId, List<ElectricityReading> electricityReadings) {
+    public MeterReadings(String meterId, List<ElectricityReading> electricityReadings) {
 
         this.meterId = meterId;
         this.electricityReadings = electricityReadings;

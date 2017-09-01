@@ -2,9 +2,8 @@ package uk.tw.energy.service;
 
 import org.junit.Test;
 import uk.tw.energy.domain.ElectricityReading;
-import uk.tw.energy.domain.MeterData;
+import uk.tw.energy.domain.MeterReadings;
 import uk.tw.energy.domain.Tariff;
-import uk.tw.energy.service.CostService;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -31,9 +30,9 @@ public class CostServiceTest {
         List<ElectricityReading> electricityReadings = new ArrayList<>();
         electricityReadings.add(beginningOfDayReading);
         electricityReadings.add(endOfDayReading);
-        MeterData meterData = new MeterData("rita", electricityReadings);
+        MeterReadings meterReadings = new MeterReadings("rita", electricityReadings);
 
-        BigDecimal cost = costService.calculateCost(meterData, tariff);
+        BigDecimal cost = costService.calculateCost(meterReadings, tariff);
 
         assertThat(cost).isEqualTo(new BigDecimal("2.40"));
     }

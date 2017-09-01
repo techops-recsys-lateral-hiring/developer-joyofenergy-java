@@ -1,8 +1,6 @@
 package uk.tw.energy.domain;
 
 import org.junit.Test;
-import uk.tw.energy.domain.ElectricityReading;
-import uk.tw.energy.domain.MeterData;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -11,7 +9,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class MeterDataTest {
+public class MeterReadingsTest {
 
     private ElectricityReading beginningOfDayReading =
             new ElectricityReading(Instant.ofEpochSecond(1504051200), BigDecimal.valueOf(1000.000));
@@ -26,9 +24,9 @@ public class MeterDataTest {
         electricityReadings.add(beginningOfDayReading);
         electricityReadings.add(endOfDayReading);
 
-        MeterData meterData = new MeterData("rita", electricityReadings);
+        MeterReadings meterReadings = new MeterReadings("rita", electricityReadings);
 
-        assertThat(meterData.getConsumption()).isEqualByComparingTo(BigDecimal.valueOf(12));
+        assertThat(meterReadings.getConsumption()).isEqualByComparingTo(BigDecimal.valueOf(12));
     }
 
     @Test
@@ -37,8 +35,8 @@ public class MeterDataTest {
         electricityReadings.add(beginningOfDayReading);
         electricityReadings.add(endOfDayReading);
         electricityReadings.add(middleOfDayReading);
-        MeterData meterData = new MeterData("sue", electricityReadings);
+        MeterReadings meterReadings = new MeterReadings("sue", electricityReadings);
 
-        assertThat(meterData.getConsumption()).isEqualByComparingTo(BigDecimal.valueOf(12));
+        assertThat(meterReadings.getConsumption()).isEqualByComparingTo(BigDecimal.valueOf(12));
     }
 }
