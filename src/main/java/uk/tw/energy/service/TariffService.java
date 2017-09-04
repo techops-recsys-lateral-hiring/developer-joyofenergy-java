@@ -6,6 +6,7 @@ import uk.tw.energy.domain.ElectricityReading;
 import uk.tw.energy.domain.Tariff;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Duration;
 import java.util.Comparator;
 import java.util.List;
@@ -45,7 +46,8 @@ public class TariffService {
         BigDecimal average = calculateAverageReading(electricityReadings);
         BigDecimal timeElapsed = calculateTimeElapsed(electricityReadings);
 
-        return average.divide(timeElapsed).multiply(tariff.getUnitRate());
+        BigDecimal averagedCost = average.divide(timeElapsed, RoundingMode.HALF_UP);
+        return averagedCost.multiply(tariff.getUnitRate());
 
     }
 

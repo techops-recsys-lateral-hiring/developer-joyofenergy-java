@@ -67,7 +67,7 @@ public class EndpointTest {
     private void populateMeterReadingsForMeter(String meterId) throws JsonProcessingException {
 
         MeterReadings readings = new MeterReadingsBuilder().setMeterId(meterId)
-                    .generateElectricityReadings()
+                    .generateElectricityReadings(20)
                     .build();
 
         HttpEntity<String> entity = getStringHttpEntity(readings);

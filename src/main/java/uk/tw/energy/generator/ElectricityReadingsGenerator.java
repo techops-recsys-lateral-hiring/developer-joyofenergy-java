@@ -5,6 +5,7 @@ import uk.tw.energy.domain.ElectricityReading;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
@@ -19,12 +20,14 @@ public class ElectricityReadingsGenerator {
 
         for (int i = 0; i < number; i++ ) {
 
-            double reading = (readingRandomiser.nextGaussian() + 1) / 2;
+            double reading = Math.abs(readingRandomiser.nextGaussian());
 
-            ElectricityReading electricityReading = new ElectricityReading(now.minusSeconds(i * 3600), BigDecimal.valueOf(reading));
+            ElectricityReading electricityReading = new ElectricityReading(now.minusSeconds(i * 10), BigDecimal.valueOf(reading));
             readings.add(electricityReading);
 
         }
+
+        readings.sort(Comparator.comparing(ElectricityReading::getTime));
 
         return readings;
 
