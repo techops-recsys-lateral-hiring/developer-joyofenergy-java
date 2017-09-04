@@ -20,7 +20,7 @@ public class TariffComparatorController {
         this.tariffService = tariffService;
     }
 
-    @PostMapping("/compare-all/{meterId}")
+    @GetMapping("/compare-all/{meterId}")
     public ResponseEntity<Map<String, BigDecimal>> calculatedCostForEachTariff(@PathVariable String meterId) {
         return ResponseEntity.ok(tariffService.getConsumptionCostOfElectricityReadingsForEachTariff(meterId));
     }

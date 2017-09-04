@@ -18,6 +18,7 @@ import uk.tw.energy.domain.MeterReadings;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.Arrays;
 
 import static java.util.Collections.nCopies;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -34,13 +35,17 @@ public class EndpointTest {
 
     @Test
     public void shouldCalculateAllPrices() throws JsonProcessingException {
-        ElectricityReading reading = new ElectricityReading(Instant.now(), BigDecimal.ONE);
-        MeterReadings meterReadings = new MeterReadings("bob", nCopies(2, reading));
-        HttpEntity<String> entity = getStringHttpEntity(meterReadings);
 
-        ResponseEntity<String> response = restTemplate.postForEntity("/tariffs/compare-all", entity, String.class);
+        ElectricityReading reading = new ElectricityReading(Instant.now().minusSeconds(3600), BigDecimal.ONE);
+        ElectricityReading otherReading = new ElectricityReading(Instant.now(), BigDecimal.ONE);
+        MeterReadings meterReadings = new MeterReadings("bob", Arrays.asList(reading, otherReading));
+        HttpEntity<String> entity = getStringHttpEntity(meterReadings);
+        restTemplate.postForEntity("/readings/store", entity, String.class);
+
+        ResponseEntity<String> response = restTemplate.getForEntity("/tariffs/compare-all/bob", String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
     }
 
     private HttpEntity<String> getStringHttpEntity(Object object) throws JsonProcessingException {
