@@ -6,6 +6,7 @@ import uk.tw.energy.service.TariffService;
 
 import java.math.BigDecimal;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/tariffs")
@@ -19,7 +20,17 @@ public class TariffComparatorController {
 
     @GetMapping("/compare-all/{meterId}")
     public ResponseEntity<Map<String, BigDecimal>> calculatedCostForEachTariff(@PathVariable String meterId) {
-        return ResponseEntity.ok(tariffService.getConsumptionCostOfElectricityReadingsForEachTariff(meterId));
+
+        Optional<Map<String, BigDecimal>> consumptionsForTariffs = tariffService.getConsumptionCostOfElectricityReadingsForEachTariff(meterId);
+
+        if ( consumptionsForTariffs.isPresent() ) {
+
+            return ResponseEntity.ok(consumptionsForTariffs.get());
+
+        }
+
+        return ResponseEntity.notFound().build();
+
     }
 
 }

@@ -10,6 +10,7 @@ import java.time.Duration;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,12 +26,17 @@ public class TariffService {
 
     }
 
-    public Map<String, BigDecimal> getConsumptionCostOfElectricityReadingsForEachTariff(String meterId) {
+    public Optional<Map<String, BigDecimal>> getConsumptionCostOfElectricityReadingsForEachTariff(String meterId) {
 
-        List<ElectricityReading> electricityReadings = meterReadingService.getReadings(meterId).get();
+        Optional<List<ElectricityReading>> electricityReadings = meterReadingService.getReadings(meterId);
 
-        return tariffs.stream().collect(Collectors.toMap(Tariff::getSupplier, t -> calculateCost(electricityReadings, t)));
+        if ( !electricityReadings.isPresent() ) {
 
+            return Optional.empty();
+
+        }
+
+        return Optional.of(tariffs.stream().collect(Collectors.toMap(Tariff::getSupplier, t -> calculateCost(electricityReadings.get(), t))));
 
     }
 

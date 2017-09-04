@@ -2,6 +2,7 @@ package uk.tw.energy.controller;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.http.HttpStatus;
 import uk.tw.energy.domain.ElectricityReading;
 import uk.tw.energy.domain.Tariff;
 import uk.tw.energy.service.MeterReadingService;
@@ -50,6 +51,13 @@ public class TariffComparatorControllerTest {
         meterReadingService.storeReadings(meterId, Arrays.asList(electricityReading, otherReading));
 
         assertThat(controller.calculatedCostForEachTariff(meterId).getBody()).isEqualTo(tariffToCost);
+
+    }
+
+    @Test
+    public void givenNoMatchingMeterIdShouldReturnNotFound() {
+
+        assertThat(controller.calculatedCostForEachTariff("not-found").getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
     }
 
