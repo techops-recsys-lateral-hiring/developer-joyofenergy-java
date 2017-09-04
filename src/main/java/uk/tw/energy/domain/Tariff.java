@@ -7,12 +7,12 @@ import java.util.List;
 import java.util.Optional;
 
 public class Tariff {
-    private final String supplier;
+    private final String name;
     private final BigDecimal unitRate; // pounds per kWh
     private List<ExceptionalTariff> exceptionalTariffs;
 
-    public Tariff(String supplier, BigDecimal unitRate, List<ExceptionalTariff> exceptionalTariffs) {
-        this.supplier = supplier;
+    public Tariff(String name, BigDecimal unitRate, List<ExceptionalTariff> exceptionalTariffs) {
+        this.name = name;
         this.unitRate = unitRate;
         this.exceptionalTariffs = exceptionalTariffs;
     }
@@ -27,8 +27,8 @@ public class Tariff {
         return exceptionalTariff.map(tariff -> unitRate.multiply(tariff.multiplier)).orElse(unitRate);
     }
 
-    public String getSupplier() {
-        return supplier;
+    public String getName() {
+        return name;
     }
 
     static class ExceptionalTariff {

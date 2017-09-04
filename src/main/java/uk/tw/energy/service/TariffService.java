@@ -36,7 +36,7 @@ public class TariffService {
 
         }
 
-        return Optional.of(tariffs.stream().collect(Collectors.toMap(Tariff::getSupplier, t -> calculateCost(electricityReadings.get(), t))));
+        return Optional.of(tariffs.stream().collect(Collectors.toMap(Tariff::getName, t -> calculateCost(electricityReadings.get(), t))));
 
     }
 
