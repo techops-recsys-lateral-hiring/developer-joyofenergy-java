@@ -9,12 +9,12 @@ import java.util.Optional;
 public class Tariff {
     private final String name;
     private final BigDecimal unitRate; // pounds per kWh
-    private List<ExceptionalTariff> exceptionalTariffs;
+    private List<PeakTimeMultiplier> peakTimeMultipliers;
 
-    public Tariff(String name, BigDecimal unitRate, List<ExceptionalTariff> exceptionalTariffs) {
+    public Tariff(String name, BigDecimal unitRate, List<PeakTimeMultiplier> peakTimeMultipliers) {
         this.name = name;
         this.unitRate = unitRate;
-        this.exceptionalTariffs = exceptionalTariffs;
+        this.peakTimeMultipliers = peakTimeMultipliers;
     }
 
     public BigDecimal getUnitRate(){
@@ -22,21 +22,21 @@ public class Tariff {
     }
 
     public BigDecimal getPrice(LocalDateTime dateTime) {
-        Optional<ExceptionalTariff> exceptionalTariff = exceptionalTariffs.stream()
+        Optional<PeakTimeMultiplier> peakTimeMultiplier = peakTimeMultipliers.stream()
                 .filter(tariff -> tariff.dayOfWeek.equals(dateTime.getDayOfWeek())).findFirst();
-        return exceptionalTariff.map(tariff -> unitRate.multiply(tariff.multiplier)).orElse(unitRate);
+        return peakTimeMultiplier.map(tariff -> unitRate.multiply(tariff.multiplier)).orElse(unitRate);
     }
 
     public String getName() {
         return name;
     }
 
-    static class ExceptionalTariff {
+    static class PeakTimeMultiplier {
 
         DayOfWeek dayOfWeek;
         BigDecimal multiplier;
 
-        public ExceptionalTariff(DayOfWeek dayOfWeek, BigDecimal multiplier) {
+        public PeakTimeMultiplier(DayOfWeek dayOfWeek, BigDecimal multiplier) {
             this.dayOfWeek = dayOfWeek;
             this.multiplier = multiplier;
         }

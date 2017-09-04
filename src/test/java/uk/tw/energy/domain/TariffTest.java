@@ -19,8 +19,8 @@ public class TariffTest {
     @Test
     public void shouldReturnTheBasePriceGivenAnOrdinaryDateTime() throws Exception {
         LocalDateTime normalDateTime = of(2017, Month.AUGUST, 31, 12, 0, 0);
-        Tariff.ExceptionalTariff exceptionalTariff = new Tariff.ExceptionalTariff(DayOfWeek.WEDNESDAY, BigDecimal.TEN);
-        Tariff tariff = new Tariff("", BigDecimal.ONE, singletonList(exceptionalTariff));
+        Tariff.PeakTimeMultiplier peakTimeMultiplier = new Tariff.PeakTimeMultiplier(DayOfWeek.WEDNESDAY, BigDecimal.TEN);
+        Tariff tariff = new Tariff("", BigDecimal.ONE, singletonList(peakTimeMultiplier));
 
         BigDecimal price = tariff.getPrice(normalDateTime);
 
@@ -30,8 +30,8 @@ public class TariffTest {
     @Test
     public void shouldReturnAnExceptionTariffPriceGivenExceptionalDateTime() throws Exception {
         LocalDateTime exceptionalDateTime = of(2017, Month.AUGUST, 30, 23, 0, 0);
-        Tariff.ExceptionalTariff exceptionalTariff = new Tariff.ExceptionalTariff(DayOfWeek.WEDNESDAY, BigDecimal.TEN);
-        Tariff tariff = new Tariff("", BigDecimal.ONE, singletonList(exceptionalTariff));
+        Tariff.PeakTimeMultiplier peakTimeMultiplier = new Tariff.PeakTimeMultiplier(DayOfWeek.WEDNESDAY, BigDecimal.TEN);
+        Tariff tariff = new Tariff("", BigDecimal.ONE, singletonList(peakTimeMultiplier));
 
         BigDecimal price = tariff.getPrice(exceptionalDateTime);
 
@@ -41,10 +41,10 @@ public class TariffTest {
     @Test
     public void shouldReceiveMultipleExceptionalDateTimes() throws Exception {
         LocalDateTime exceptionalDateTime = of(2017, Month.AUGUST, 30, 23, 0, 0);
-        Tariff.ExceptionalTariff exceptionalTariff = new Tariff.ExceptionalTariff(DayOfWeek.WEDNESDAY, BigDecimal.TEN);
-        Tariff.ExceptionalTariff otherExceptionalTariff = new Tariff.ExceptionalTariff(DayOfWeek.TUESDAY, BigDecimal.TEN);
-        List<Tariff.ExceptionalTariff> exceptionalTariffs = Arrays.asList(exceptionalTariff, otherExceptionalTariff);
-        Tariff tariff = new Tariff("", BigDecimal.ONE, exceptionalTariffs);
+        Tariff.PeakTimeMultiplier peakTimeMultiplier = new Tariff.PeakTimeMultiplier(DayOfWeek.WEDNESDAY, BigDecimal.TEN);
+        Tariff.PeakTimeMultiplier otherPeakTimeMultiplier = new Tariff.PeakTimeMultiplier(DayOfWeek.TUESDAY, BigDecimal.TEN);
+        List<Tariff.PeakTimeMultiplier> peakTimeMultipliers = Arrays.asList(peakTimeMultiplier, otherPeakTimeMultiplier);
+        Tariff tariff = new Tariff("", BigDecimal.ONE, peakTimeMultipliers);
 
         BigDecimal price = tariff.getPrice(exceptionalDateTime);
 
