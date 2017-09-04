@@ -13,14 +13,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
-import uk.tw.energy.domain.ElectricityReading;
+import uk.tw.energy.builders.MeterReadingsBuilder;
 import uk.tw.energy.domain.MeterReadings;
 
-import java.math.BigDecimal;
-import java.time.Instant;
-import java.util.Arrays;
-
-import static java.util.Collections.nCopies;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
@@ -36,30 +31,19 @@ public class EndpointTest {
     @Test
     public void shouldCalculateAllPrices() throws JsonProcessingException {
 
-        ElectricityReading reading = new ElectricityReading(Instant.now().minusSeconds(3600), BigDecimal.ONE);
-        ElectricityReading otherReading = new ElectricityReading(Instant.now(), BigDecimal.ONE);
-        MeterReadings meterReadings = new MeterReadings("bob", Arrays.asList(reading, otherReading));
-        HttpEntity<String> entity = getStringHttpEntity(meterReadings);
-        restTemplate.postForEntity("/readings/store", entity, String.class);
+        String meterId = "bob";
+        populateMeterReadingsForMeter(meterId);
 
-        ResponseEntity<String> response = restTemplate.getForEntity("/tariffs/compare-all/bob", String.class);
+        ResponseEntity<String> response = restTemplate.getForEntity("/tariffs/compare-all/" + meterId, String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
     }
 
-    private HttpEntity<String> getStringHttpEntity(Object object) throws JsonProcessingException {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        String jsonMeterData = mapper.writeValueAsString(object);
-        return (HttpEntity<String>) new HttpEntity(jsonMeterData,headers);
-    }
-
     @Test
     public void shouldStoreReadings() throws JsonProcessingException {
 
-        ElectricityReading reading = new ElectricityReading(Instant.now(), BigDecimal.ONE);
-        MeterReadings meterReadings = new MeterReadings("bob", nCopies(2, reading));
+        MeterReadings meterReadings = new MeterReadingsBuilder().generateElectricityReadings().build();
         HttpEntity<String> entity = getStringHttpEntity(meterReadings);
 
         ResponseEntity<String> response = restTemplate.postForEntity("/readings/store", entity, String.class);
@@ -71,16 +55,31 @@ public class EndpointTest {
     @Test
     public void givenMeterIdShouldReturnAMeterReadingAssociatedWithMeterId() throws JsonProcessingException {
 
-        ElectricityReading reading = new ElectricityReading(Instant.now(), BigDecimal.ONE);
-        MeterReadings meterReadings = new MeterReadings("bob", nCopies(2, reading));
-        HttpEntity<String> entity = getStringHttpEntity(meterReadings);
-        restTemplate.postForEntity("/readings/store", entity, String.class);
+        String meterId = "bob";
+        populateMeterReadingsForMeter(meterId);
 
-        ResponseEntity<String> response = restTemplate.getForEntity("/readings/read/bob", String.class);
+        ResponseEntity<String> response = restTemplate.getForEntity("/readings/read/" + meterId, String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
     }
 
+    private void populateMeterReadingsForMeter(String meterId) throws JsonProcessingException {
+
+        MeterReadings readings = new MeterReadingsBuilder().setMeterId(meterId)
+                    .generateElectricityReadings()
+                    .build();
+
+        HttpEntity<String> entity = getStringHttpEntity(readings);
+        restTemplate.postForEntity("/readings/store", entity, String.class);
+
+    }
+
+    private HttpEntity<String> getStringHttpEntity(Object object) throws JsonProcessingException {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        String jsonMeterData = mapper.writeValueAsString(object);
+        return (HttpEntity<String>) new HttpEntity(jsonMeterData,headers);
+    }
 
 }

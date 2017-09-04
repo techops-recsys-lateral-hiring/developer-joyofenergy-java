@@ -4,7 +4,6 @@ import org.junit.Before;
 import org.junit.Test;
 import uk.tw.energy.domain.ElectricityReading;
 import uk.tw.energy.domain.Tariff;
-import uk.tw.energy.service.CostService;
 import uk.tw.energy.service.MeterReadingService;
 import uk.tw.energy.service.TariffService;
 import java.math.BigDecimal;
@@ -14,8 +13,6 @@ import java.util.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class TariffComparatorControllerTest {
-
-    private CostService costService;
 
     private TariffService tariffService;
 
@@ -28,7 +25,6 @@ public class TariffComparatorControllerTest {
     @Before
     public void setUp() {
 
-        costService = new CostService();
         meterReadingService = new MeterReadingService();
 
         Tariff tariff = new Tariff(tariffName, BigDecimal.TEN, null);
@@ -36,7 +32,7 @@ public class TariffComparatorControllerTest {
 
         List<Tariff> tariffs = Arrays.asList(tariff, otherTariff);
         tariffService = new TariffService(tariffs, meterReadingService);
-        controller = new TariffComparatorController(costService, tariffService);
+        controller = new TariffComparatorController(tariffService);
 
     }
 
