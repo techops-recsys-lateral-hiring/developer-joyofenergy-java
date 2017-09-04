@@ -26,7 +26,7 @@ public class TariffComparatorControllerTest {
     @Before
     public void setUp() {
 
-        meterReadingService = new MeterReadingService();
+        meterReadingService = new MeterReadingService(new HashMap<>());
 
         Tariff tariff = new Tariff(tariffName, BigDecimal.TEN, null);
         Tariff otherTariff = new Tariff(otherTariffName, BigDecimal.ONE, null);

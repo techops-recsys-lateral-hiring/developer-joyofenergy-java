@@ -12,6 +12,7 @@ import uk.tw.energy.service.MeterReadingService;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -26,7 +27,7 @@ public class MeterReadingControllerTest {
     @Before
     public void setUp() {
 
-        this.meterReadingService = new MeterReadingService();
+        this.meterReadingService = new MeterReadingService(new HashMap<>());
         this.meterReadingController = new MeterReadingController(meterReadingService);
 
     }

@@ -8,7 +8,13 @@ import java.util.*;
 @Service
 public class MeterReadingService {
 
-    private Map<String, List<ElectricityReading>> meterAssociatedReadings = new HashMap<>();
+    private Map<String, List<ElectricityReading>> meterAssociatedReadings;
+
+    public MeterReadingService(Map<String, List<ElectricityReading>> meterAssociatedReadings) {
+
+        this.meterAssociatedReadings = meterAssociatedReadings;
+
+    }
 
     public Optional<List<ElectricityReading>> getReadings(String meterId) {
 
