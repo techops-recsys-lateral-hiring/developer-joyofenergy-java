@@ -24,30 +24,24 @@ public class AppConfiguration {
 
     @Bean
     public List<Tariff> tariffList(){
-
         List<Tariff> tariffs = new ArrayList<>();
         tariffs.add(new Tariff("tariff-0", BigDecimal.ONE, emptyList()));
         tariffs.add(new Tariff("tariff-1", BigDecimal.TEN, emptyList()));
         tariffs.add(new Tariff("tariff-2", BigDecimal.valueOf(2), emptyList()));
 
         return tariffs;
-
     }
 
     @Bean
     public Map<String, List<ElectricityReading>> perMeterElectricityReadings() {
-
         Map<String, List<ElectricityReading>> readings = new HashMap<>();
         ElectricityReadingsGenerator electricityReadingsGenerator = new ElectricityReadingsGenerator();
 
         for ( int i = 0; i < 5; i++ ) {
-
             readings.put("meter-" + i, electricityReadingsGenerator.generate(20));
-
         }
 
         return readings;
-
     }
 
     @Bean
@@ -55,7 +49,7 @@ public class AppConfiguration {
     public ObjectMapper objectMapper(Jackson2ObjectMapperBuilder builder) {
         ObjectMapper objectMapper = builder.createXmlMapper(false).build();
         objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+
         return objectMapper;
     }
-
 }

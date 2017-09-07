@@ -9,13 +9,14 @@ import uk.tw.energy.service.MeterReadingService;
 import uk.tw.energy.service.TariffService;
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class TariffComparatorControllerTest {
-
-    private TariffService tariffService;
 
     private TariffComparatorController controller;
     private MeterReadingService meterReadingService;
@@ -25,22 +26,16 @@ public class TariffComparatorControllerTest {
 
     @Before
     public void setUp() {
-
         meterReadingService = new MeterReadingService(new HashMap<>());
-
         Tariff tariff = new Tariff(tariffName, BigDecimal.TEN, null);
         Tariff otherTariff = new Tariff(otherTariffName, BigDecimal.ONE, null);
-
         List<Tariff> tariffs = Arrays.asList(tariff, otherTariff);
-        tariffService = new TariffService(tariffs, meterReadingService);
+        TariffService tariffService = new TariffService(tariffs, meterReadingService);
         controller = new TariffComparatorController(tariffService);
-
     }
-
 
     @Test
     public void shouldCalculateCostForMeterReadingsForEveryTariff() {
-
         Map<String, BigDecimal> tariffToCost = new HashMap<>();
         tariffToCost.put(tariffName, BigDecimal.valueOf(100.0));
         tariffToCost.put(otherTariffName, BigDecimal.valueOf(10.0));
@@ -51,14 +46,10 @@ public class TariffComparatorControllerTest {
         meterReadingService.storeReadings(meterId, Arrays.asList(electricityReading, otherReading));
 
         assertThat(controller.calculatedCostForEachTariff(meterId).getBody()).isEqualTo(tariffToCost);
-
     }
 
     @Test
     public void givenNoMatchingMeterIdShouldReturnNotFound() {
-
         assertThat(controller.calculatedCostForEachTariff("not-found").getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-
     }
-
 }

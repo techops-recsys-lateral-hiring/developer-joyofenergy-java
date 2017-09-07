@@ -6,11 +6,9 @@ apply from: 'gradle/service-test.gradle'
 
 // In this section you declare where to find the dependencies of your project
 repositories {
-
     jcenter()
     mavenCentral()
     maven { url 'https://repo.spring.io/libs-milestone' }
-
 }
 
 task wrapper(type: Wrapper) {
@@ -50,7 +48,6 @@ dependencies {
     testCompile 'junit:junit:4.12',
             'org.assertj:assertj-core:3.8.0',
             'org.springframework.boot:spring-boot-starter-test:2.0.0.M3'
-
 }
 
 // Define the main class for the application

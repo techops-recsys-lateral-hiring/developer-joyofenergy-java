@@ -16,26 +16,20 @@ public class MeterReadingController {
     private MeterReadingService meterReadingService;
 
     public MeterReadingController(MeterReadingService meterReadingService) {
-
         this.meterReadingService = meterReadingService;
-
     }
 
     @PostMapping("/store")
     public ResponseEntity storeReadings(@RequestBody MeterReadings meterReadings) {
-
         meterReadingService.storeReadings(meterReadings.getMeterId(), meterReadings.getElectricityReadings());
         return ResponseEntity.ok().build();
-
     }
 
     @GetMapping("/read/{meterId}")
     public ResponseEntity readReadings(@PathVariable String meterId) {
-
         Optional<List<ElectricityReading>> readings = meterReadingService.getReadings(meterId);
-
-        return readings.isPresent() ? ResponseEntity.ok(readings.get()) : ResponseEntity.notFound().build();
-
+        return readings.isPresent()
+                ? ResponseEntity.ok(readings.get())
+                : ResponseEntity.notFound().build();
     }
-
 }

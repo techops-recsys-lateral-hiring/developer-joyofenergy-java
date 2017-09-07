@@ -10,7 +10,6 @@ import java.time.Month;
 import java.util.Arrays;
 import java.util.List;
 
-import static java.time.LocalDateTime.*;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
@@ -18,7 +17,7 @@ public class TariffTest {
 
     @Test
     public void shouldReturnTheBasePriceGivenAnOrdinaryDateTime() throws Exception {
-        LocalDateTime normalDateTime = of(2017, Month.AUGUST, 31, 12, 0, 0);
+        LocalDateTime normalDateTime = LocalDateTime.of(2017, Month.AUGUST, 31, 12, 0, 0);
         Tariff.PeakTimeMultiplier peakTimeMultiplier = new Tariff.PeakTimeMultiplier(DayOfWeek.WEDNESDAY, BigDecimal.TEN);
         Tariff tariff = new Tariff("", BigDecimal.ONE, singletonList(peakTimeMultiplier));
 
@@ -29,7 +28,7 @@ public class TariffTest {
 
     @Test
     public void shouldReturnAnExceptionTariffPriceGivenExceptionalDateTime() throws Exception {
-        LocalDateTime exceptionalDateTime = of(2017, Month.AUGUST, 30, 23, 0, 0);
+        LocalDateTime exceptionalDateTime = LocalDateTime.of(2017, Month.AUGUST, 30, 23, 0, 0);
         Tariff.PeakTimeMultiplier peakTimeMultiplier = new Tariff.PeakTimeMultiplier(DayOfWeek.WEDNESDAY, BigDecimal.TEN);
         Tariff tariff = new Tariff("", BigDecimal.ONE, singletonList(peakTimeMultiplier));
 
@@ -40,7 +39,7 @@ public class TariffTest {
 
     @Test
     public void shouldReceiveMultipleExceptionalDateTimes() throws Exception {
-        LocalDateTime exceptionalDateTime = of(2017, Month.AUGUST, 30, 23, 0, 0);
+        LocalDateTime exceptionalDateTime = LocalDateTime.of(2017, Month.AUGUST, 30, 23, 0, 0);
         Tariff.PeakTimeMultiplier peakTimeMultiplier = new Tariff.PeakTimeMultiplier(DayOfWeek.WEDNESDAY, BigDecimal.TEN);
         Tariff.PeakTimeMultiplier otherPeakTimeMultiplier = new Tariff.PeakTimeMultiplier(DayOfWeek.TUESDAY, BigDecimal.TEN);
         List<Tariff.PeakTimeMultiplier> peakTimeMultipliers = Arrays.asList(peakTimeMultiplier, otherPeakTimeMultiplier);
@@ -50,5 +49,4 @@ public class TariffTest {
 
         assertThat(price).isCloseTo(BigDecimal.TEN, Percentage.withPercentage(1));
     }
-
 }

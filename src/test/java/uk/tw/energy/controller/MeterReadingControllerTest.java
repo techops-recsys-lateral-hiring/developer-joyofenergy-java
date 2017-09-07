@@ -26,23 +26,18 @@ public class MeterReadingControllerTest {
 
     @Before
     public void setUp() {
-
         this.meterReadingService = new MeterReadingService(new HashMap<>());
         this.meterReadingController = new MeterReadingController(meterReadingService);
-
     }
 
     @Test
     public void givenEmptyMeterReadingShouldReturnOK() {
-
         MeterReadings meterReadings = new MeterReadings(METER_ID, Collections.emptyList());
         assertThat(meterReadingController.storeReadings(meterReadings).getStatusCode()).isEqualTo(HttpStatus.OK);
-
     }
 
     @Test
     public void givenMultipleBatchesOfMeterReadingsShouldStore() {
-
         MeterReadings meterReadings = new MeterReadingsBuilder().setMeterId(METER_ID)
                 .generateElectricityReadings()
                 .build();
@@ -59,12 +54,10 @@ public class MeterReadingControllerTest {
         expectedElectricityReadings.addAll(otherMeterReadings.getElectricityReadings());
 
         assertThat(meterReadingService.getReadings(METER_ID).get()).isEqualTo(expectedElectricityReadings);
-
     }
 
     @Test
     public void givenMeterReadingsAssociatedWithTheUserShouldStoreAssociatedWithUser() {
-
         MeterReadings meterReadings = new MeterReadingsBuilder().setMeterId(METER_ID)
                 .generateElectricityReadings()
                 .build();
@@ -77,14 +70,10 @@ public class MeterReadingControllerTest {
         meterReadingController.storeReadings(otherMeterReadings);
 
         assertThat(meterReadingService.getReadings(METER_ID).get()).isEqualTo(meterReadings.getElectricityReadings());
-
     }
 
     @Test
     public void givenMeterIdThatIsNotRecognisedShouldReturnNotFound() {
-
         assertThat(meterReadingController.readReadings(METER_ID).getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
-
     }
-
 }

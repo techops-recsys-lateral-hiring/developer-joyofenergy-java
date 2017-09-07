@@ -7,8 +7,9 @@ import java.util.List;
 import java.util.Optional;
 
 public class Tariff {
+
     private final String name;
-    private final BigDecimal unitRate; // pounds per kWh
+    private final BigDecimal unitRate; // unit price per kWh
     private List<PeakTimeMultiplier> peakTimeMultipliers;
 
     public Tariff(String name, BigDecimal unitRate, List<PeakTimeMultiplier> peakTimeMultipliers) {

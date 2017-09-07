@@ -22,7 +22,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = App.class)
 public class EndpointTest {
 
-
     @Autowired
     private TestRestTemplate restTemplate;
     @Autowired
@@ -30,49 +29,41 @@ public class EndpointTest {
 
     @Test
     public void shouldCalculateAllPrices() throws JsonProcessingException {
-
         String meterId = "bob";
         populateMeterReadingsForMeter(meterId);
 
         ResponseEntity<String> response = restTemplate.getForEntity("/tariffs/compare-all/" + meterId, String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-
     }
 
     @Test
     public void shouldStoreReadings() throws JsonProcessingException {
-
         MeterReadings meterReadings = new MeterReadingsBuilder().generateElectricityReadings().build();
         HttpEntity<String> entity = getStringHttpEntity(meterReadings);
 
         ResponseEntity<String> response = restTemplate.postForEntity("/readings/store", entity, String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-
     }
 
     @Test
     public void givenMeterIdShouldReturnAMeterReadingAssociatedWithMeterId() throws JsonProcessingException {
-
         String meterId = "bob";
         populateMeterReadingsForMeter(meterId);
 
         ResponseEntity<String> response = restTemplate.getForEntity("/readings/read/" + meterId, String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-
     }
 
     private void populateMeterReadingsForMeter(String meterId) throws JsonProcessingException {
-
         MeterReadings readings = new MeterReadingsBuilder().setMeterId(meterId)
                     .generateElectricityReadings(20)
                     .build();
 
         HttpEntity<String> entity = getStringHttpEntity(readings);
         restTemplate.postForEntity("/readings/store", entity, String.class);
-
     }
 
     private HttpEntity<String> getStringHttpEntity(Object object) throws JsonProcessingException {
@@ -81,5 +72,4 @@ public class EndpointTest {
         String jsonMeterData = mapper.writeValueAsString(object);
         return (HttpEntity<String>) new HttpEntity(jsonMeterData,headers);
     }
-
 }

@@ -10,10 +10,8 @@ public class MeterReadings {
     public MeterReadings() { }
 
     public MeterReadings(String meterId, List<ElectricityReading> electricityReadings) {
-
         this.meterId = meterId;
         this.electricityReadings = electricityReadings;
-
     }
 
     public List<ElectricityReading> getElectricityReadings() {
