@@ -1,8 +1,8 @@
-# TW Energy
+# JOI Energy
 
 ## Overview
 
-JOI is a new energy company that uses data to ensure customers are 
+JOI Energy is a new energy company that uses data to ensure customers are 
 able to be on the best tariff for their energy consumption.
 
 ## API
@@ -20,7 +20,7 @@ POST
 
 #### Input
 
-```
+```json
 {
     "meterId": <meterId>,
     "electricityReadings": [
@@ -46,7 +46,7 @@ GET
 
 #### Output
 
-```
+```json
 [
     { "time": "2017-09-07T10:37:52.362Z", "reading": 1.3524882598124337 },
     ...
@@ -66,7 +66,7 @@ GET
 
 #### Output
 
-```
+```json
 {
     "tariff-0": 21.78133785680731809,
     ...
@@ -80,19 +80,19 @@ GET
 
 ## Build
 
-```
-gradle build
+```console
+$ gradle build
 ```
 
 ## Test
 
-```
-gradle test # Run unit tests
-gradle functionalTest # Run functional tests
+```console
+$ gradle test # Run unit tests
+$ gradle functionalTest # Run functional tests
 ```
 
 ## Run
 
-```
-gradle run # available at localhost:8080 by default
+```console
+$ gradle run # available at localhost:8080 by default
 ```
