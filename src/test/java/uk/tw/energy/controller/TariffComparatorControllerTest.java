@@ -42,8 +42,8 @@ public class TariffComparatorControllerTest {
     public void shouldCalculateCostForMeterReadingsForEveryTariff() {
 
         Map<String, BigDecimal> tariffToCost = new HashMap<>();
-        tariffToCost.put(tariffName, BigDecimal.valueOf(100));
-        tariffToCost.put(otherTariffName, BigDecimal.valueOf(10));
+        tariffToCost.put(tariffName, BigDecimal.valueOf(100.0));
+        tariffToCost.put(otherTariffName, BigDecimal.valueOf(10.0));
 
         String meterId = "meter-id";
         ElectricityReading electricityReading = new ElectricityReading(Instant.now().minusSeconds(3600), BigDecimal.valueOf(15.0));
