@@ -22,26 +22,58 @@ import static java.util.Collections.emptyList;
 @SuppressWarnings("unused")
 public class AppConfiguration {
 
+    private static final String TARIFF_0 = "tariff-0";
+    private static final String TARIFF_1 = "tariff-1";
+    private static final String TARIFF_2 = "tariff-2";
+    private static final String METER_0 = "meter-0";
+    private static final String METER_1 = "meter-1";
+    private static final String METER_2 = "meter-2";
+    private static final String METER_3 = "meter-3";
+    private static final String METER_4 = "meter-4";
+
     @Bean
     public List<Tariff> tariffList(){
         List<Tariff> tariffs = new ArrayList<>();
-        tariffs.add(new Tariff("tariff-0", BigDecimal.ONE, emptyList()));
-        tariffs.add(new Tariff("tariff-1", BigDecimal.TEN, emptyList()));
-        tariffs.add(new Tariff("tariff-2", BigDecimal.valueOf(2), emptyList()));
+        tariffs.add(new Tariff(TARIFF_0, BigDecimal.ONE, emptyList()));
+        tariffs.add(new Tariff(TARIFF_1, BigDecimal.TEN, emptyList()));
+        tariffs.add(new Tariff(TARIFF_2, BigDecimal.valueOf(2), emptyList()));
 
         return tariffs;
     }
 
     @Bean
     public Map<String, List<ElectricityReading>> perMeterElectricityReadings() {
+
+        return generateMeterElectricityReadings();
+    }
+
+    private Map<String, List<ElectricityReading>> generateMeterElectricityReadings() {
+
+        Map<String, String> meterIdsWithTariffs = meterToTariffIds();
+
         Map<String, List<ElectricityReading>> readings = new HashMap<>();
         ElectricityReadingsGenerator electricityReadingsGenerator = new ElectricityReadingsGenerator();
 
-        for ( int i = 0; i < 5; i++ ) {
-            readings.put("meter-" + i, electricityReadingsGenerator.generate(20));
-        }
+        meterIdsWithTariffs.keySet()
+                .forEach(meterId -> readings.put(meterId, electricityReadingsGenerator.generate(20)));
 
         return readings;
+    }
+
+
+    @Bean
+    public Map<String, String> meterToTariffIds() {
+
+        Map<String, String> meterIdsWithTariffs = new HashMap<>();
+
+        meterIdsWithTariffs.put(METER_0, TARIFF_0);
+        meterIdsWithTariffs.put(METER_1, TARIFF_1);
+        meterIdsWithTariffs.put(METER_2, TARIFF_0);
+        meterIdsWithTariffs.put(METER_3, TARIFF_2);
+        meterIdsWithTariffs.put(METER_4, TARIFF_1);
+
+
+        return meterIdsWithTariffs;
     }
 
     @Bean
