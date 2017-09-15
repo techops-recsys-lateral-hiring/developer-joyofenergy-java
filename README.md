@@ -87,7 +87,7 @@ GET
 
 `meterId`: A string value, e.g. `meter-0`
 
-`limit`: Limit to display only a number of tariffs, e.g. `2`
+`limit`: Optional limit to display only a number of tariffs, e.g. `2`
 
 #### Output
 
