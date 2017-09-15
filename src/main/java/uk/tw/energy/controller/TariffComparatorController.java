@@ -1,18 +1,12 @@
 package uk.tw.energy.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import uk.tw.energy.service.AccountService;
 import uk.tw.energy.service.TariffService;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/tariffs")
@@ -48,7 +42,20 @@ public class TariffComparatorController {
     }
 
     @GetMapping("/recommend/{meterId}")
-    public ResponseEntity<List<Map.Entry<String,BigDecimal>>> recommendCheapestTariffs(String meterId) {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<List<Map.Entry<String,BigDecimal>>> recommendCheapestTariffs(@PathVariable String meterId, @RequestParam(value = "limit", required = false) Integer limit) {
+        Optional<Map<String, BigDecimal>> consumptionsForTariffs = tariffService.getConsumptionCostOfElectricityReadingsForEachTariff(meterId);
+
+        if (!consumptionsForTariffs.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        List<Map.Entry<String,BigDecimal>> recommendations = new ArrayList<>(consumptionsForTariffs.get().entrySet());
+        recommendations.sort(Comparator.comparing(Map.Entry::getValue));
+
+        if (limit != null && limit < recommendations.size()) {
+            recommendations = recommendations.subList(0, limit);
+        }
+
+        return ResponseEntity.ok(recommendations);
     }
 }

@@ -62,18 +62,48 @@ public class TariffComparatorControllerTest {
     }
 
     @Test
-    public void shouldRecommendNCheapest() throws Exception {
+    public void shouldRecommendCheapestTariffsNoLimitForMeterUsage() throws Exception {
 
         ElectricityReading electricityReading = new ElectricityReading(Instant.now().minusSeconds(1800), BigDecimal.valueOf(35.0));
         ElectricityReading otherReading = new ElectricityReading(Instant.now(), BigDecimal.valueOf(3.0));
         meterReadingService.storeReadings(METER_ID, Arrays.asList(electricityReading, otherReading));
 
         List<Map.Entry<String,BigDecimal>> expectedTariffToCost = new ArrayList<>();
-        expectedTariffToCost.add(new AbstractMap.SimpleEntry<>(TARIFF_2_ID, BigDecimal.valueOf(10.0)));
-        expectedTariffToCost.add(new AbstractMap.SimpleEntry<>(TARIFF_3_ID, BigDecimal.valueOf(20.0)));
+        expectedTariffToCost.add(new AbstractMap.SimpleEntry<>(TARIFF_2_ID, BigDecimal.valueOf(38.0)));
+        expectedTariffToCost.add(new AbstractMap.SimpleEntry<>(TARIFF_3_ID, BigDecimal.valueOf(76.0)));
+        expectedTariffToCost.add(new AbstractMap.SimpleEntry<>(TARIFF_1_ID, BigDecimal.valueOf(380.0)));
 
-//        assertThat(controller.recommendCheapestTariffs(METER_ID).getBody()).isEqualTo(expectedTariffToCost);
+        assertThat(controller.recommendCheapestTariffs(METER_ID, null).getBody()).isEqualTo(expectedTariffToCost);
+    }
 
+
+    @Test
+    public void shouldRecommendLimitedCheapestTariffsForMeterUsage() throws Exception {
+
+        ElectricityReading electricityReading = new ElectricityReading(Instant.now().minusSeconds(2700), BigDecimal.valueOf(5.0));
+        ElectricityReading otherReading = new ElectricityReading(Instant.now(), BigDecimal.valueOf(20.0));
+        meterReadingService.storeReadings(METER_ID, Arrays.asList(electricityReading, otherReading));
+
+        List<Map.Entry<String,BigDecimal>> expectedTariffToCost = new ArrayList<>();
+        expectedTariffToCost.add(new AbstractMap.SimpleEntry<>(TARIFF_2_ID, BigDecimal.valueOf(16.7)));
+        expectedTariffToCost.add(new AbstractMap.SimpleEntry<>(TARIFF_3_ID, BigDecimal.valueOf(33.4)));
+
+        assertThat(controller.recommendCheapestTariffs(METER_ID, 2).getBody()).isEqualTo(expectedTariffToCost);
+    }
+
+    @Test
+    public void shouldRecommendCheapestTariffsMoreThanLimitAvailableForMeterUsage() throws Exception {
+
+        ElectricityReading electricityReading = new ElectricityReading(Instant.now().minusSeconds(3600), BigDecimal.valueOf(25.0));
+        ElectricityReading otherReading = new ElectricityReading(Instant.now(), BigDecimal.valueOf(3.0));
+        meterReadingService.storeReadings(METER_ID, Arrays.asList(electricityReading, otherReading));
+
+        List<Map.Entry<String,BigDecimal>> expectedTariffToCost = new ArrayList<>();
+        expectedTariffToCost.add(new AbstractMap.SimpleEntry<>(TARIFF_2_ID, BigDecimal.valueOf(14.0)));
+        expectedTariffToCost.add(new AbstractMap.SimpleEntry<>(TARIFF_3_ID, BigDecimal.valueOf(28.0)));
+        expectedTariffToCost.add(new AbstractMap.SimpleEntry<>(TARIFF_1_ID, BigDecimal.valueOf(140.0)));
+
+        assertThat(controller.recommendCheapestTariffs(METER_ID, 5).getBody()).isEqualTo(expectedTariffToCost);
     }
 
     @Test

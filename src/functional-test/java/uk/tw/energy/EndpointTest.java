@@ -28,16 +28,6 @@ public class EndpointTest {
     private ObjectMapper mapper;
 
     @Test
-    public void shouldCalculateAllPrices() throws JsonProcessingException {
-        String meterId = "bob";
-        populateMeterReadingsForMeter(meterId);
-
-        ResponseEntity<String> response = restTemplate.getForEntity("/tariffs/compare-all/" + meterId, String.class);
-
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    }
-
-    @Test
     public void shouldStoreReadings() throws JsonProcessingException {
         MeterReadings meterReadings = new MeterReadingsBuilder().generateElectricityReadings().build();
         HttpEntity<String> entity = getStringHttpEntity(meterReadings);
@@ -57,13 +47,23 @@ public class EndpointTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
-    private void populateMeterReadingsForMeter(String meterId) throws JsonProcessingException {
-        MeterReadings readings = new MeterReadingsBuilder().setMeterId(meterId)
-                    .generateElectricityReadings(20)
-                    .build();
+    @Test
+    public void shouldCalculateAllPrices() throws JsonProcessingException {
+        String meterId = "bob";
+        populateMeterReadingsForMeter(meterId);
 
-        HttpEntity<String> entity = getStringHttpEntity(readings);
-        restTemplate.postForEntity("/readings/store", entity, String.class);
+        ResponseEntity<String> response = restTemplate.getForEntity("/tariffs/compare-all/" + meterId, String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    }
+
+    @Test
+    public void givenMeterIdAndLimitShouldReturnRecommendedCheapestTariffs() throws JsonProcessingException {
+        String meterId = "bob";
+        populateMeterReadingsForMeter(meterId);
+
+        ResponseEntity<String> response = restTemplate.getForEntity("/tariffs/recommend/" + meterId + "?limit=2", String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     private HttpEntity<String> getStringHttpEntity(Object object) throws JsonProcessingException {
@@ -71,5 +71,14 @@ public class EndpointTest {
         headers.setContentType(MediaType.APPLICATION_JSON);
         String jsonMeterData = mapper.writeValueAsString(object);
         return (HttpEntity<String>) new HttpEntity(jsonMeterData,headers);
+    }
+
+    private void populateMeterReadingsForMeter(String meterId) throws JsonProcessingException {
+        MeterReadings readings = new MeterReadingsBuilder().setMeterId(meterId)
+                .generateElectricityReadings(20)
+                .build();
+
+        HttpEntity<String> entity = getStringHttpEntity(readings);
+        restTemplate.postForEntity("/readings/store", entity, String.class);
     }
 }
