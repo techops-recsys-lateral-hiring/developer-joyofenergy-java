@@ -20,17 +20,20 @@ public class TariffComparatorControllerTest {
     private MeterReadingService meterReadingService;
     private AccountService accountService;
 
-    private String TARIFF_1_ID = "test-supplier";
-    private String otherTariffName = "best-supplier";
+    private static final String TARIFF_1_ID = "test-supplier";
+    private static final String TARIFF_2_ID = "best-supplier";
+    private static final String TARIFF_3_ID = "second-best-supplier";
     private static final String METER_ID = "meter-id";
 
 
     @Before
     public void setUp() {
         meterReadingService = new MeterReadingService(new HashMap<>());
-        Tariff tariff = new Tariff(TARIFF_1_ID, BigDecimal.TEN, null);
-        Tariff otherTariff = new Tariff(otherTariffName, BigDecimal.ONE, null);
-        List<Tariff> tariffs = Arrays.asList(tariff, otherTariff);
+        Tariff tariff1 = new Tariff(TARIFF_1_ID, BigDecimal.TEN, null);
+        Tariff tariff2 = new Tariff(TARIFF_2_ID, BigDecimal.ONE, null);
+        Tariff tariff3 = new Tariff(TARIFF_3_ID, BigDecimal.valueOf(2), null);
+
+        List<Tariff> tariffs = Arrays.asList(tariff1, tariff2, tariff3);
         TariffService tariffService = new TariffService(tariffs, meterReadingService);
 
         Map<String,String> meterToTariffs = new HashMap<>();
@@ -49,12 +52,28 @@ public class TariffComparatorControllerTest {
 
         Map<String, BigDecimal> expectedTariffToCost = new HashMap<>();
         expectedTariffToCost.put(TARIFF_1_ID, BigDecimal.valueOf(100.0));
-        expectedTariffToCost.put(otherTariffName, BigDecimal.valueOf(10.0));
+        expectedTariffToCost.put(TARIFF_2_ID, BigDecimal.valueOf(10.0));
+        expectedTariffToCost.put(TARIFF_3_ID, BigDecimal.valueOf(20.0));
 
         Map<String,Object> expected = new HashMap<>();
         expected.put(TariffComparatorController.TARIFF_ID_KEY, TARIFF_1_ID);
         expected.put(TariffComparatorController.TARIFF_COMPARISONS_KEY, expectedTariffToCost);
         assertThat(controller.calculatedCostForEachTariff(METER_ID).getBody()).isEqualTo(expected);
+    }
+
+    @Test
+    public void shouldRecommendNCheapest() throws Exception {
+
+        ElectricityReading electricityReading = new ElectricityReading(Instant.now().minusSeconds(1800), BigDecimal.valueOf(35.0));
+        ElectricityReading otherReading = new ElectricityReading(Instant.now(), BigDecimal.valueOf(3.0));
+        meterReadingService.storeReadings(METER_ID, Arrays.asList(electricityReading, otherReading));
+
+        List<Map.Entry<String,BigDecimal>> expectedTariffToCost = new ArrayList<>();
+        expectedTariffToCost.add(new AbstractMap.SimpleEntry<>(TARIFF_2_ID, BigDecimal.valueOf(10.0)));
+        expectedTariffToCost.add(new AbstractMap.SimpleEntry<>(TARIFF_3_ID, BigDecimal.valueOf(20.0)));
+
+//        assertThat(controller.recommendCheapestTariffs(METER_ID).getBody()).isEqualTo(expectedTariffToCost);
+
     }
 
     @Test

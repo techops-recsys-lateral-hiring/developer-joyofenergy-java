@@ -10,6 +10,7 @@ import uk.tw.energy.service.TariffService;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -44,5 +45,10 @@ public class TariffComparatorController {
         return consumptionsForTariffs.isPresent()
                 ? ResponseEntity.ok(tariffComparisons)
                 : ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/recommend/{meterId}")
+    public ResponseEntity<List<Map.Entry<String,BigDecimal>>> recommendCheapestTariffs(String meterId) {
+        return ResponseEntity.ok().build();
     }
 }
