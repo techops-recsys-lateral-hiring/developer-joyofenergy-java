@@ -17,18 +17,14 @@ public class AccountServiceTest {
 
     @Before
     public void setUp() {
-
         Map<String, String> meterIdsWithTariffs = new HashMap<>();
         meterIdsWithTariffs.put(METER_ID, TARIFF_ID);
 
         accountService = new AccountService(meterIdsWithTariffs);
-
     }
 
     @Test
     public void givenTheMeterIdReturnsTheTariffId() throws Exception {
-
         assertThat(accountService.getTariffForMeter(METER_ID)).isEqualTo(TARIFF_ID);
-
     }
 }
