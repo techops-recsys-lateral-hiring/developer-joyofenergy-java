@@ -49,7 +49,7 @@ public class TariffService {
                 .map(ElectricityReading::getReading)
                 .reduce(BigDecimal.ZERO, (reading, accumulator) -> reading.add(accumulator));
 
-        return summedReadings.divide(BigDecimal.valueOf(electricityReadings.size()));
+        return summedReadings.divide(BigDecimal.valueOf(electricityReadings.size()), RoundingMode.HALF_UP);
     }
 
     private BigDecimal calculateTimeElapsed(List<ElectricityReading> electricityReadings) {
