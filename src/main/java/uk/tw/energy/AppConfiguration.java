@@ -11,10 +11,7 @@ import uk.tw.energy.domain.Tariff;
 import uk.tw.energy.generator.ElectricityReadingsGenerator;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static java.util.Collections.emptyList;
 
@@ -22,24 +19,36 @@ import static java.util.Collections.emptyList;
 @SuppressWarnings("unused")
 public class AppConfiguration {
 
+    private static final String TARIFF_0 = "tariff-0";
+    private static final String TARIFF_1 = "tariff-1";
+    private static final String TARIFF_2 = "tariff-2";
+    private static final String METER_0 = "meter-0";
+    private static final String METER_1 = "meter-1";
+    private static final String METER_2 = "meter-2";
+    private static final String METER_3 = "meter-3";
+    private static final String METER_4 = "meter-4";
+
     @Bean
     public List<Tariff> tariffList(){
         List<Tariff> tariffs = new ArrayList<>();
-        tariffs.add(new Tariff("tariff-0", BigDecimal.ONE, emptyList()));
-        tariffs.add(new Tariff("tariff-1", BigDecimal.TEN, emptyList()));
-        tariffs.add(new Tariff("tariff-2", BigDecimal.valueOf(2), emptyList()));
-
+        tariffs.add(new Tariff(TARIFF_0, BigDecimal.ONE, emptyList()));
+        tariffs.add(new Tariff(TARIFF_1, BigDecimal.TEN, emptyList()));
+        tariffs.add(new Tariff(TARIFF_2, BigDecimal.valueOf(2), emptyList()));
         return tariffs;
     }
 
     @Bean
     public Map<String, List<ElectricityReading>> perMeterElectricityReadings() {
+
+        return generateMeterElectricityReadings();
+    }
+
+    private Map<String, List<ElectricityReading>> generateMeterElectricityReadings() {
+        List<String> meterIds = Arrays.asList(METER_0, METER_1, METER_2, METER_3, METER_4);
+
         Map<String, List<ElectricityReading>> readings = new HashMap<>();
         ElectricityReadingsGenerator electricityReadingsGenerator = new ElectricityReadingsGenerator();
-
-        for ( int i = 0; i < 5; i++ ) {
-            readings.put("meter-" + i, electricityReadingsGenerator.generate(20));
-        }
+        meterIds.forEach(meterId -> readings.put(meterId, electricityReadingsGenerator.generate(20)));
 
         return readings;
     }
