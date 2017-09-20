@@ -30,10 +30,23 @@ public class MeterReadingControllerTest {
         this.meterReadingController = new MeterReadingController(meterReadingService);
     }
 
+
     @Test
-    public void givenEmptyMeterReadingShouldReturnOK() {
+    public void givenNoMeterIdIsSuppliedWhenStoringShouldReturnErrorResponse() {
+        MeterReadings meterReadings = new MeterReadings(null, Collections.emptyList());
+        assertThat(meterReadingController.storeReadings(meterReadings).getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Test
+    public void givenEmptyMeterReadingShouldReturnErrorResponse() {
         MeterReadings meterReadings = new MeterReadings(METER_ID, Collections.emptyList());
-        assertThat(meterReadingController.storeReadings(meterReadings).getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(meterReadingController.storeReadings(meterReadings).getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Test
+    public void givenNullReadingsAreSuppliedWhenStoringShouldReturnErrorResponse() {
+        MeterReadings meterReadings = new MeterReadings(METER_ID, null);
+        assertThat(meterReadingController.storeReadings(meterReadings).getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @Test
@@ -76,4 +89,5 @@ public class MeterReadingControllerTest {
     public void givenMeterIdThatIsNotRecognisedShouldReturnNotFound() {
         assertThat(meterReadingController.readReadings(METER_ID).getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
+
 }

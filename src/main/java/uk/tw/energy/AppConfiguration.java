@@ -44,13 +44,32 @@ public class AppConfiguration {
     }
 
     private Map<String, List<ElectricityReading>> generateMeterElectricityReadings() {
-        List<String> meterIds = Arrays.asList(METER_0, METER_1, METER_2, METER_3, METER_4);
+
+        Map<String, String> meterIdsWithTariffs = meterToTariffIds();
 
         Map<String, List<ElectricityReading>> readings = new HashMap<>();
         ElectricityReadingsGenerator electricityReadingsGenerator = new ElectricityReadingsGenerator();
-        meterIds.forEach(meterId -> readings.put(meterId, electricityReadingsGenerator.generate(20)));
+
+        meterIdsWithTariffs.keySet()
+                .forEach(meterId -> readings.put(meterId, electricityReadingsGenerator.generate(20)));
 
         return readings;
+    }
+
+
+    @Bean
+    public Map<String, String> meterToTariffIds() {
+
+        Map<String, String> meterIdsWithTariffs = new HashMap<>();
+
+        meterIdsWithTariffs.put(METER_0, TARIFF_0);
+        meterIdsWithTariffs.put(METER_1, TARIFF_1);
+        meterIdsWithTariffs.put(METER_2, TARIFF_0);
+        meterIdsWithTariffs.put(METER_3, TARIFF_2);
+        meterIdsWithTariffs.put(METER_4, TARIFF_1);
+
+
+        return meterIdsWithTariffs;
     }
 
     @Bean

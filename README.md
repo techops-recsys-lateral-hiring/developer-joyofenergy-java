@@ -53,7 +53,7 @@ GET
 ]
 ```
 
-### Calculate Usage Cost of Meter against all Tariffs
+### View Current Tariff and Compare Usage Cost Against all Tariffs
 
 #### Endpoint
 
@@ -68,9 +68,36 @@ GET
 
 ```json
 {
-    "tariff-0": 21.78133785680731809,
-    ...
+    "tariff-id": "tariff-2",
+    "tariff-comparisons": { 
+        "tariff-0": 21.78133785680731809,
+        ...
+    }
 }
+```
+
+### View Recommended Tariffs for Usage
+
+#### Endpoint
+
+```
+GET
+/tariffs/recommend/<meterId>[?limit=<limit>]
+```
+
+`meterId`: A string value, e.g. `meter-0`
+
+`limit`: Optional limit to display only a number of tariffs, e.g. `2`
+
+#### Output
+
+```json
+[
+    { 
+        "tariff-0": 15.084324881035297
+    },
+    ...
+]
 ```
 
 ## Requirements
