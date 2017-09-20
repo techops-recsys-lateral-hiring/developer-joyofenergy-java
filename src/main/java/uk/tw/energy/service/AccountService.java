@@ -9,13 +9,13 @@ import java.util.Map;
 public class AccountService {
 
     @Autowired
-    private Map<String , String > meterToTariffIds;
+    private Map<String,String> smartMeterToPricePlanAccounts;
 
-    public AccountService(Map<String, String> meterToTariffIds) {
-        this.meterToTariffIds = meterToTariffIds;
+    public AccountService(Map<String,String> smartMeterToPricePlanAccounts) {
+        this.smartMeterToPricePlanAccounts = smartMeterToPricePlanAccounts;
     }
 
-    public String getTariffForMeter(String meterId) {
-        return meterToTariffIds.get(meterId);
+    public String getPricePlanIdForSmartMeterId(String smartMeterId) {
+        return smartMeterToPricePlanAccounts.get(smartMeterId);
     }
 }

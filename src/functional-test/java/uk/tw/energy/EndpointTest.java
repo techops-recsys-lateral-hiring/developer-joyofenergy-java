@@ -39,30 +39,30 @@ public class EndpointTest {
 
     @Test
     public void givenMeterIdShouldReturnAMeterReadingAssociatedWithMeterId() throws JsonProcessingException {
-        String meterId = "bob";
-        populateMeterReadingsForMeter(meterId);
+        String smartMeterId = "bob";
+        populateMeterReadingsForMeter(smartMeterId);
 
-        ResponseEntity<String> response = restTemplate.getForEntity("/readings/read/" + meterId, String.class);
+        ResponseEntity<String> response = restTemplate.getForEntity("/readings/read/" + smartMeterId, String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     @Test
     public void shouldCalculateAllPrices() throws JsonProcessingException {
-        String meterId = "bob";
-        populateMeterReadingsForMeter(meterId);
+        String smartMeterId = "bob";
+        populateMeterReadingsForMeter(smartMeterId);
 
-        ResponseEntity<String> response = restTemplate.getForEntity("/tariffs/compare-all/" + meterId, String.class);
+        ResponseEntity<String> response = restTemplate.getForEntity("/price-plans/compare-all/" + smartMeterId, String.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     @Test
-    public void givenMeterIdAndLimitShouldReturnRecommendedCheapestTariffs() throws JsonProcessingException {
-        String meterId = "bob";
-        populateMeterReadingsForMeter(meterId);
+    public void givenMeterIdAndLimitShouldReturnRecommendedCheapestPricePlans() throws JsonProcessingException {
+        String smartMeterId = "bob";
+        populateMeterReadingsForMeter(smartMeterId);
 
-        ResponseEntity<String> response = restTemplate.getForEntity("/tariffs/recommend/" + meterId + "?limit=2", String.class);
+        ResponseEntity<String> response = restTemplate.getForEntity("/price-plans/recommend/" + smartMeterId + "?limit=2", String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
@@ -73,8 +73,8 @@ public class EndpointTest {
         return (HttpEntity<String>) new HttpEntity(jsonMeterData,headers);
     }
 
-    private void populateMeterReadingsForMeter(String meterId) throws JsonProcessingException {
-        MeterReadings readings = new MeterReadingsBuilder().setMeterId(meterId)
+    private void populateMeterReadingsForMeter(String smartMeterId) throws JsonProcessingException {
+        MeterReadings readings = new MeterReadingsBuilder().setSmartMeterId(smartMeterId)
                 .generateElectricityReadings(20)
                 .build();
 

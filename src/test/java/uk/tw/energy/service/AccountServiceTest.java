@@ -10,21 +10,21 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class AccountServiceTest {
 
-    private static final String TARIFF_ID = "tariff-id";
-    private static final String METER_ID = "meter-id";
+    private static final String PRICE_PLAN_ID = "price-plan-id";
+    private static final String SMART_METER_ID = "smart-meter-id";
 
     private AccountService accountService;
 
     @Before
     public void setUp() {
-        Map<String, String> meterIdsWithTariffs = new HashMap<>();
-        meterIdsWithTariffs.put(METER_ID, TARIFF_ID);
+        Map<String, String> smartMeterToPricePlanAccounts = new HashMap<>();
+        smartMeterToPricePlanAccounts.put(SMART_METER_ID, PRICE_PLAN_ID);
 
-        accountService = new AccountService(meterIdsWithTariffs);
+        accountService = new AccountService(smartMeterToPricePlanAccounts);
     }
 
     @Test
-    public void givenTheMeterIdReturnsTheTariffId() throws Exception {
-        assertThat(accountService.getTariffForMeter(METER_ID)).isEqualTo(TARIFF_ID);
+    public void givenTheSmartMeterIdReturnsThePricePlanId() throws Exception {
+        assertThat(accountService.getPricePlanIdForSmartMeterId(SMART_METER_ID)).isEqualTo(PRICE_PLAN_ID);
     }
 }

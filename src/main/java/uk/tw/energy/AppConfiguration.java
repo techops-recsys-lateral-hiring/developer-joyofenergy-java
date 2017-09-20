@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import uk.tw.energy.domain.ElectricityReading;
-import uk.tw.energy.domain.Tariff;
+import uk.tw.energy.domain.PricePlan;
 import uk.tw.energy.generator.ElectricityReadingsGenerator;
 
 import java.math.BigDecimal;
@@ -19,22 +19,27 @@ import static java.util.Collections.emptyList;
 @SuppressWarnings("unused")
 public class AppConfiguration {
 
-    private static final String TARIFF_0 = "tariff-0";
-    private static final String TARIFF_1 = "tariff-1";
-    private static final String TARIFF_2 = "tariff-2";
-    private static final String METER_0 = "meter-0";
-    private static final String METER_1 = "meter-1";
-    private static final String METER_2 = "meter-2";
-    private static final String METER_3 = "meter-3";
-    private static final String METER_4 = "meter-4";
+    private static final String DR_EVILS_DARK_ENERGY_ENERGY_SUPPLIER = "Dr Evil's Dark Energy";
+    private static final String THE_GREEN_ECO_ENERGY_SUPPLIER = "The Green Eco";
+    private static final String POWER_FOR_EVERYONE_ENERGY_SUPPLIER = "Power for Everyone";
+
+    private static final String MOST_EVIL_PRICE_PLAN_ID = "price-plan-0";
+    private static final String RENEWABLES_PRICE_PLAN_ID = "price-plan-1";
+    private static final String STANDARD_PRICE_PLAN_ID = "price-plan-2";
+
+    private static final String SARAHS_SMART_METER_ID = "smart-meter-0";
+    private static final String PETERS_SMART_METER_ID = "smart-meter-1";
+    private static final String CHARLIES_SMART_METER_ID = "smart-meter-2";
+    private static final String ANDREAS_SMART_METER_ID = "smart-meter-3";
+    private static final String ALEXS_SMART_METER_ID = "smart-meter-4";
 
     @Bean
-    public List<Tariff> tariffList(){
-        List<Tariff> tariffs = new ArrayList<>();
-        tariffs.add(new Tariff(TARIFF_0, BigDecimal.ONE, emptyList()));
-        tariffs.add(new Tariff(TARIFF_1, BigDecimal.TEN, emptyList()));
-        tariffs.add(new Tariff(TARIFF_2, BigDecimal.valueOf(2), emptyList()));
-        return tariffs;
+    public List<PricePlan> pricePlans(){
+        List<PricePlan> pricePlans = new ArrayList<>();
+        pricePlans.add(new PricePlan(MOST_EVIL_PRICE_PLAN_ID, DR_EVILS_DARK_ENERGY_ENERGY_SUPPLIER, BigDecimal.TEN, emptyList()));
+        pricePlans.add(new PricePlan(RENEWABLES_PRICE_PLAN_ID, THE_GREEN_ECO_ENERGY_SUPPLIER, BigDecimal.valueOf(2), emptyList()));
+        pricePlans.add(new PricePlan(STANDARD_PRICE_PLAN_ID, POWER_FOR_EVERYONE_ENERGY_SUPPLIER, BigDecimal.ONE, emptyList()));
+        return pricePlans;
     }
 
     @Bean
@@ -44,32 +49,22 @@ public class AppConfiguration {
     }
 
     private Map<String, List<ElectricityReading>> generateMeterElectricityReadings() {
-
-        Map<String, String> meterIdsWithTariffs = meterToTariffIds();
-
         Map<String, List<ElectricityReading>> readings = new HashMap<>();
         ElectricityReadingsGenerator electricityReadingsGenerator = new ElectricityReadingsGenerator();
-
-        meterIdsWithTariffs.keySet()
-                .forEach(meterId -> readings.put(meterId, electricityReadingsGenerator.generate(20)));
-
+        Set<String> smartMeterIds = smartMeterToPricePlanAccounts().keySet();
+        smartMeterIds.forEach(smartMeterId -> readings.put(smartMeterId, electricityReadingsGenerator.generate(20)));
         return readings;
     }
 
-
     @Bean
-    public Map<String, String> meterToTariffIds() {
-
-        Map<String, String> meterIdsWithTariffs = new HashMap<>();
-
-        meterIdsWithTariffs.put(METER_0, TARIFF_0);
-        meterIdsWithTariffs.put(METER_1, TARIFF_1);
-        meterIdsWithTariffs.put(METER_2, TARIFF_0);
-        meterIdsWithTariffs.put(METER_3, TARIFF_2);
-        meterIdsWithTariffs.put(METER_4, TARIFF_1);
-
-
-        return meterIdsWithTariffs;
+    public Map<String, String> smartMeterToPricePlanAccounts() {
+        Map<String, String> smartMeterToPricePlanAccounts = new HashMap<>();
+        smartMeterToPricePlanAccounts.put(SARAHS_SMART_METER_ID, MOST_EVIL_PRICE_PLAN_ID);
+        smartMeterToPricePlanAccounts.put(PETERS_SMART_METER_ID, RENEWABLES_PRICE_PLAN_ID);
+        smartMeterToPricePlanAccounts.put(CHARLIES_SMART_METER_ID, MOST_EVIL_PRICE_PLAN_ID);
+        smartMeterToPricePlanAccounts.put(ANDREAS_SMART_METER_ID, STANDARD_PRICE_PLAN_ID);
+        smartMeterToPricePlanAccounts.put(ALEXS_SMART_METER_ID, RENEWABLES_PRICE_PLAN_ID);
+        return smartMeterToPricePlanAccounts;
     }
 
     @Bean
@@ -77,7 +72,6 @@ public class AppConfiguration {
     public ObjectMapper objectMapper(Jackson2ObjectMapperBuilder builder) {
         ObjectMapper objectMapper = builder.createXmlMapper(false).build();
         objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-
         return objectMapper;
     }
 }
