@@ -1,6 +1,5 @@
 package uk.tw.energy.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.tw.energy.domain.ElectricityReading;
 import uk.tw.energy.domain.PricePlan;
@@ -17,9 +16,8 @@ import java.util.stream.Collectors;
 @Service
 public class PricePlanService {
 
-    @Autowired
     private final List<PricePlan> pricePlans;
-    private MeterReadingService meterReadingService;
+    private final MeterReadingService meterReadingService;
 
     public PricePlanService(List<PricePlan> pricePlans, MeterReadingService meterReadingService) {
         this.pricePlans = pricePlans;
@@ -29,11 +27,12 @@ public class PricePlanService {
     public Optional<Map<String, BigDecimal>> getConsumptionCostOfElectricityReadingsForEachPricePlan(String smartMeterId) {
         Optional<List<ElectricityReading>> electricityReadings = meterReadingService.getReadings(smartMeterId);
 
-        if ( !electricityReadings.isPresent() ) {
+        if (!electricityReadings.isPresent()) {
             return Optional.empty();
         }
 
-        return Optional.of(pricePlans.stream().collect(Collectors.toMap(PricePlan::getPlanName, t -> calculateCost(electricityReadings.get(), t))));
+        return Optional.of(pricePlans.stream().collect(
+                Collectors.toMap(PricePlan::getPlanName, t -> calculateCost(electricityReadings.get(), t))));
     }
 
     private BigDecimal calculateCost(List<ElectricityReading> electricityReadings, PricePlan pricePlan) {
@@ -62,5 +61,5 @@ public class PricePlanService {
 
         return BigDecimal.valueOf(Duration.between(first.getTime(), last.getTime()).getSeconds() / 3600.0);
     }
-    
+
 }

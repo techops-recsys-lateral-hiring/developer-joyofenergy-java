@@ -1,18 +1,17 @@
-apply plugin: 'java'
-apply plugin: 'idea'
-// Apply the application plugin to add support for building an application
-apply plugin: 'application'
-apply from: 'gradle/service-test.gradle'
-
-// In this section you declare where to find the dependencies of your project
-repositories {
-    jcenter()
-    mavenCentral()
-    maven { url 'https://repo.spring.io/libs-milestone' }
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '2.3.3.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.10.RELEASE'
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '4.1'
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+repositories {
+    mavenCentral()
+    jcenter()
 }
 
 sourceSets {
@@ -27,29 +26,41 @@ sourceSets {
 }
 
 configurations {
-    functionalTestCompile.extendsFrom testCompile
-    functionalTestRuntime.extendsFrom testRuntime
+    functionalTestImplementation.extendsFrom testImplementation
+    functionalTestRuntimeOnly.extendsFrom testRuntimeOnly
 }
 
 task functionalTest(type: Test) {
-    testClassesDir = sourceSets.functionalTest.output.classesDir
+    group = 'verification'
+    description = 'Runs the functional tests.'
+    testClassesDirs = sourceSets.functionalTest.output.classesDirs
     classpath = sourceSets.functionalTest.runtimeClasspath
     outputs.upToDateWhen { false }
-}
+    mustRunAfter test
 
-tasks.withType(Test) {
-    reports.html.destination = file("${reporting.baseDir}/${name}")
+    useJUnitPlatform()
+
+    testLogging {
+        events = ['FAILED', 'PASSED', 'SKIPPED', 'STANDARD_OUT']
+    }
 }
 
 dependencies {
-    compile 'com.google.guava:guava:23.0',
-            'org.springframework.boot:spring-boot-starter-web:2.0.0.M3',
-            'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
-    testCompile 'junit:junit:4.12',
-            'org.assertj:assertj-core:3.8.0',
-            'org.springframework.boot:spring-boot-starter-test:2.0.0.M3'
+    /* Spring Boot */
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
 }
 
-// Define the main class for the application
-mainClassName = 'uk.tw.energy.App'
+test {
+    useJUnitPlatform()
 
+    testLogging {
+        events = ['FAILED', 'PASSED', 'SKIPPED', 'STANDARD_OUT']
+    }
+}
+
+check {
+    dependsOn functionalTest
+}

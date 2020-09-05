@@ -11,7 +11,7 @@ import java.util.Optional;
 @Service
 public class MeterReadingService {
 
-    private Map<String, List<ElectricityReading>> meterAssociatedReadings;
+    private final Map<String, List<ElectricityReading>> meterAssociatedReadings;
 
     public MeterReadingService(Map<String, List<ElectricityReading>> meterAssociatedReadings) {
         this.meterAssociatedReadings = meterAssociatedReadings;
@@ -22,7 +22,7 @@ public class MeterReadingService {
     }
 
     public void storeReadings(String smartMeterId, List<ElectricityReading> electricityReadings) {
-        if ( !meterAssociatedReadings.containsKey(smartMeterId) ) {
+        if (!meterAssociatedReadings.containsKey(smartMeterId)) {
             meterAssociatedReadings.put(smartMeterId, new ArrayList<>());
         }
         meterAssociatedReadings.get(smartMeterId).addAll(electricityReadings);

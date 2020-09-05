@@ -1,7 +1,7 @@
 package uk.tw.energy.service;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +15,7 @@ public class AccountServiceTest {
 
     private AccountService accountService;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         Map<String, String> smartMeterToPricePlanAccounts = new HashMap<>();
         smartMeterToPricePlanAccounts.put(SMART_METER_ID, PRICE_PLAN_ID);

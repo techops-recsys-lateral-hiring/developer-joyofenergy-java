@@ -16,7 +16,7 @@ public class ElectricityReadingsGenerator {
         Instant now = Instant.now();
 
         Random readingRandomiser = new Random();
-        for (int i = 0; i < number; i++ ) {
+        for (int i = 0; i < number; i++) {
             double reading = Math.abs(readingRandomiser.nextGaussian());
             ElectricityReading electricityReading = new ElectricityReading(now.minusSeconds(i * 10), BigDecimal.valueOf(reading));
             readings.add(electricityReading);

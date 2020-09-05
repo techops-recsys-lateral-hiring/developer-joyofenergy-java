@@ -2,8 +2,7 @@ package uk.tw.energy;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -12,13 +11,11 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.junit4.SpringRunner;
 import uk.tw.energy.builders.MeterReadingsBuilder;
 import uk.tw.energy.domain.MeterReadings;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = App.class)
 public class EndpointTest {
 
@@ -62,7 +59,8 @@ public class EndpointTest {
         String smartMeterId = "bob";
         populateMeterReadingsForMeter(smartMeterId);
 
-        ResponseEntity<String> response = restTemplate.getForEntity("/price-plans/recommend/" + smartMeterId + "?limit=2", String.class);
+        ResponseEntity<String> response =
+                restTemplate.getForEntity("/price-plans/recommend/" + smartMeterId + "?limit=2", String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
@@ -70,7 +68,7 @@ public class EndpointTest {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         String jsonMeterData = mapper.writeValueAsString(object);
-        return (HttpEntity<String>) new HttpEntity(jsonMeterData,headers);
+        return (HttpEntity<String>) new HttpEntity(jsonMeterData, headers);
     }
 
     private void populateMeterReadingsForMeter(String smartMeterId) throws JsonProcessingException {

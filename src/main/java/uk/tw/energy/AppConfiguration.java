@@ -11,7 +11,11 @@ import uk.tw.energy.domain.PricePlan;
 import uk.tw.energy.generator.ElectricityReadingsGenerator;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static java.util.Collections.emptyList;
 
@@ -34,7 +38,7 @@ public class AppConfiguration {
     private static final String ALEXS_SMART_METER_ID = "smart-meter-4";
 
     @Bean
-    public List<PricePlan> pricePlans(){
+    public List<PricePlan> pricePlans() {
         List<PricePlan> pricePlans = new ArrayList<>();
         pricePlans.add(new PricePlan(MOST_EVIL_PRICE_PLAN_ID, DR_EVILS_DARK_ENERGY_ENERGY_SUPPLIER, BigDecimal.TEN, emptyList()));
         pricePlans.add(new PricePlan(RENEWABLES_PRICE_PLAN_ID, THE_GREEN_ECO_ENERGY_SUPPLIER, BigDecimal.valueOf(2), emptyList()));
