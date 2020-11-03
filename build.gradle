@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'idea'
     id 'org.springframework.boot' version '2.3.3.RELEASE'
     id 'io.spring.dependency-management' version '1.0.10.RELEASE'
 }
@@ -22,6 +23,13 @@ sourceSets {
             srcDir file('src/functional-test/java')
         }
         resources.srcDir file('src/functional-test/resources')
+    }
+}
+
+idea {
+    module {
+        testSourceDirs += project.sourceSets.functionalTest.java.srcDirs
+        testSourceDirs += project.sourceSets.functionalTest.resources.srcDirs
     }
 }
 
