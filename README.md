@@ -44,6 +44,8 @@ To trial the new JOI software 5 people from the JOI accounts team have agreed to
 | Andrea  | `smart-meter-3` | Power for Everyone    |
 | Alex    | `smart-meter-4` | The Green Eco         |
 
+These values are used in the code and in the following examples.
+
 ## Overview
 
 JOI Energy is a new energy company that uses data to ensure customers are able to be on the best price plan for their energy consumption.
@@ -54,98 +56,154 @@ Below is a list of API endpoints with their respective input and output.
 
 ### Store Readings
 
-#### Endpoint
+Endpoint
 
 ```
-POST
-/readings/store
+POST /readings/store
 ```
 
-#### Input
+Example of body
 
 ```json
 {
     "smartMeterId": <smartMeterId>,
     "electricityReadings": [
         { "time": <timestamp>, "reading": <reading> },
+        { "time": <timestamp>, "reading": <reading> },
         ...
     ]
 }
 ```
 
-`timestamp`: Unix timestamp example: `1504777098`
-`reading`: kW reading of meter at that time example: `0.0503`
+Parameters
+
+| Parameter      | Description                                |
+|----------------|--------------------------------------------|
+| `smartMeterId` | One of the smart meters ids listed above   |
+| `timestamp`    | The time when the *delta* is measured      |
+| `reading`      | The *delta* reading since the last reading |
+
+Example readings
+
+| Date (`GMT`)      | Epoch timestamp | Reading (`kW`) |
+|-------------------|----------------:|---------------:|
+| `2020-11-11 8:00` |      1605081600 |         0.0503 |
+| `2020-11-12 8:00` |      1605168000 |         0.0213 |
+
+In the above example, `0.0213 kW` where consumed between `2020-11-11 8:00` and `2020-11-12 8:00`.
+
+Posting readings using CURL
+
+```console
+$ curl \
+  -X POST \
+  -H "Content-Type: application/json" \
+  "http://localhost:8080/readings/store" \
+  -d '{"smartMeterId":"smart-meter-0","electricityReadings":[{"time":1605081600,"reading":0.0503},{"time":1605168000,"reading":0.0213}]}'
+```
+
+The above
 
 ### Get Stored Readings
 
-#### Endpoint
+Endpoint
 
 ```
-GET
-/readings/read/<smartMeterId>
+GET /readings/read/<smartMeterId>
 ```
 
-`smartMeterId`: A string value example: `smart-meter-0`
+Parameters
 
-#### Output
+| Parameter      | Description                                |
+|----------------|--------------------------------------------|
+| `smartMeterId` | One of the smart meters ids listed above   |
+
+Retrieving readings using CURL
+
+```console
+$ curl "http://localhost:8080/readings/read/smart-meter-0"
+```
+
+Example output
 
 ```json
 [
-    { "time": "2017-09-07T10:37:52.362Z", "reading": 1.3524882598124337 },
-    ...
+  { "time": "2020-11-11T08:00:00.000000Z", "reading": 0.0503 },
+  { "time": "2020-11-12T08:00:00.000000Z", "reading": 0.0213 },
+  ...
 ]
 ```
 
 ### View Current Price Plan and Compare Usage Cost Against all Price Plans
 
-#### Endpoint
+Endpoint
 
 ```
-GET
-/price-plans/compare-all/<smartMeterId>
+GET /price-plans/compare-all/<smartMeterId>
 ```
 
-`smartMeterId`: A string value example. `smart-meter-0`
+Parameters
 
-#### Output
+| Parameter      | Description                                |
+|----------------|--------------------------------------------|
+| `smartMeterId` | One of the smart meters ids listed above   |
+
+Retrieving readings using CURL
+
+```console
+$ curl "http://localhost:8080/price-plans/compare-all/smart-meter-0"
+```
+
+Example output
 
 ```json
 {
-    "pricePlanId": "price-plan-2",
-    "pricePlanComparisons": {
-        "price-plan-0": 21.78133785680731809,
-        ...
-    }
+  "pricePlanComparisons": {
+    "price-plan-2": 13.824,
+    "price-plan-1": 27.648,
+    "price-plan-0": 138.24
+  },
+  "pricePlanId": "price-plan-0"
 }
 ```
 
 ### View Recommended Price Plans for Usage
 
-#### Endpoint
+Endpoint
 
 ```
-GET
-/price-plans/recommend/<smartMeterId>[?limit=<limit>]
+GET /price-plans/recommend/<smartMeterId>[?limit=<limit>]
 ```
 
-`smartMeterId`: A string value example. `smart-meter-0`
+Parameters
 
-`limit`: Optional limit to display only a number of price plans, example. `2`
+| Parameter      | Description                                          |
+|----------------|------------------------------------------------------|
+| `smartMeterId` | One of the smart meters ids listed above             |
+| `limit`        | (Optional) limit the number of plans to be displayed |
 
-#### Output
+Retrieving readings using CURL
+
+```console
+$ curl "http://localhost:8080/price-plans/recommend/smart-meter-0?limit=2"
+```
+
+Example output
 
 ```json
 [
-    {
-        "price-plan-0": 15.084324881035297
-    },
-    ...
+  {
+    "price-plan-2": 13.824
+  },
+  {
+    "price-plan-1": 27.648
+  }
 ]
 ```
 
 ## Requirements
 
-- [Java 1.8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
+The project requires [Java 1.8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) or higher.
 
 The project makes use of Gradle and uses the [Gradle wrapper](https://docs.gradle.org/current/userguide/gradle_wrapper.html), which means you don't need Gradle installed.
 
