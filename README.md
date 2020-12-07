@@ -14,7 +14,7 @@ JOI Energy is a new start-up in the energy industry.  Rather than selling energy
 
 You have been placed into their development team, whose current goal is to produce an API which their customers and smart meters will interact with.
 
-Unfortunately, two members of the team are on annual leave, and another one has called in sick!  You are left with a ThoughtWorker to progress with the current user stories on the story wall.  This is your chance to make an impact on the business, improve the code base and deliver value.
+Unfortunately, two members of the team are on annual leave, and another one has called in sick!  You are left with another ThoughtWorker to progress with the current user stories on the story wall.  This is your chance to make an impact on the business, improve the code base and deliver value.
 
 ## Story Wall
 
@@ -44,7 +44,7 @@ To trial the new JOI software 5 people from the JOI accounts team have agreed to
 | Andrea  | `smart-meter-3` | Power for Everyone    |
 | Alex    | `smart-meter-4` | The Green Eco         |
 
-These values are used in the code and in the following examples.
+These values are used in the code and in the following examples too.
 
 ## Overview
 
@@ -52,7 +52,7 @@ JOI Energy is a new energy company that uses data to ensure customers are able t
 
 ## API
 
-Below is a list of API endpoints with their respective input and output.
+Below is a list of API endpoints with their respective input and output.  Please note that the application needs to be running.  For more information about how to run the application, please refer to [run the application](#run-the-application) section below.
 
 ### Store Readings
 
@@ -79,7 +79,7 @@ Parameters
 
 | Parameter      | Description                                |
 |----------------|--------------------------------------------|
-| `smartMeterId` | One of the smart meters ids listed above   |
+| `smartMeterId` | One of the smart meters' id listed above   |
 | `timestamp`    | The time when the *delta* is measured      |
 | `reading`      | The *delta* reading since the last reading |
 
@@ -102,7 +102,7 @@ $ curl \
   -d '{"smartMeterId":"smart-meter-0","electricityReadings":[{"time":1605081600,"reading":0.0503},{"time":1605168000,"reading":0.0213}]}'
 ```
 
-The above
+The above command does not return anything.
 
 ### Get Stored Readings
 
@@ -114,9 +114,9 @@ GET /readings/read/<smartMeterId>
 
 Parameters
 
-| Parameter      | Description                                |
-|----------------|--------------------------------------------|
-| `smartMeterId` | One of the smart meters ids listed above   |
+| Parameter      | Description                              |
+|----------------|------------------------------------------|
+| `smartMeterId` | One of the smart meters' id listed above |
 
 Retrieving readings using CURL
 
@@ -144,9 +144,9 @@ GET /price-plans/compare-all/<smartMeterId>
 
 Parameters
 
-| Parameter      | Description                                |
-|----------------|--------------------------------------------|
-| `smartMeterId` | One of the smart meters ids listed above   |
+| Parameter      | Description                              |
+|----------------|------------------------------------------|
+| `smartMeterId` | One of the smart meters' id listed above |
 
 Retrieving readings using CURL
 
@@ -179,7 +179,7 @@ Parameters
 
 | Parameter      | Description                                          |
 |----------------|------------------------------------------------------|
-| `smartMeterId` | One of the smart meters ids listed above             |
+| `smartMeterId` | One of the smart meters' id listed above             |
 | `limit`        | (Optional) limit the number of plans to be displayed |
 
 Retrieving readings using CURL
@@ -207,7 +207,11 @@ The project requires [Java 1.8](http://www.oracle.com/technetwork/java/javase/do
 
 The project makes use of Gradle and uses the [Gradle wrapper](https://docs.gradle.org/current/userguide/gradle_wrapper.html), which means you don't need Gradle installed.
 
-## Tasks
+## Useful Gradle commands
+
+The project makes use of Gradle and uses the [Gradle wrapper](https://docs.gradle.org/current/userguide/gradle_wrapper.html), to help you out carrying some common tasks such as building the project or running it.
+
+### List all Gradle tasks
 
 List all the tasks that Gradle can do, such as `build` and `test`.
 
@@ -215,7 +219,7 @@ List all the tasks that Gradle can do, such as `build` and `test`.
 $ ./gradlew tasks
 ```
 
-## Build
+### Build the project
 
 Compiles the project, runs the test and then created an executable JAR file
 
@@ -229,7 +233,7 @@ Run the application using Java and the executable JAR file produced by the Gradl
 $ java -jar build/libs/tw-energy.jar
 ```
 
-## Test
+### Run the tests
 
 There are two types of tests, the unit tests and the functional tests.  These can be executed as follows.
 
@@ -251,10 +255,12 @@ There are two types of tests, the unit tests and the functional tests.  These ca
   $ ./gradlew check
   ```
 
-## Run
+### Run the application
 
 Run the application which will be listening on port `8080`.
 
 ```console
 $ ./gradlew bootRun
 ```
+
+The application will be listening to port `8080`.
