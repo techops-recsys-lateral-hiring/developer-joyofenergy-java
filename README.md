@@ -262,5 +262,3 @@ Run the application which will be listening on port `8080`.
 ```console
 $ ./gradlew bootRun
 ```
-
-The application will be listening to port `8080`.
