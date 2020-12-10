@@ -1,6 +1,6 @@
 # Welcome to PowerDale
 
-PowerDale is a small town with around 100 residents.  Most houses have a smart meter installed that can save and send information about how much energy a house has used.
+PowerDale is a small town with around 100 residents. Most houses have a smart meter installed that can save and send information about how much energy a house has used.
 
 There are three major providers of energy in town that charge different amounts for the power they supply.
 
@@ -10,11 +10,11 @@ There are three major providers of energy in town that charge different amounts 
 
 # Introducing JOI Energy
 
-JOI Energy is a new start-up in the energy industry.  Rather than selling energy they want to differentiate themselves from the market by recording their customers' energy usage from their smart meters and recommending the best supplier to meet their needs.
+JOI Energy is a new start-up in the energy industry. Rather than selling energy they want to differentiate themselves from the market by recording their customers' energy usage from their smart meters and recommending the best supplier to meet their needs.
 
 You have been placed into their development team, whose current goal is to produce an API which their customers and smart meters will interact with.
 
-Unfortunately, two members of the team are on annual leave, and another one has called in sick!  You are left with another ThoughtWorker to progress with the current user stories on the story wall.  This is your chance to make an impact on the business, improve the code base and deliver value.
+Unfortunately, two members of the team are on annual leave, and another one has called in sick! You are left with another ThoughtWorker to progress with the current user stories on the story wall. This is your chance to make an impact on the business, improve the code base and deliver value.
 
 ## Story Wall
 
@@ -37,7 +37,7 @@ Examples can be found here [https://leankit.com/learn/kanban/kanban-board/](http
 To trial the new JOI software 5 people from the JOI accounts team have agreed to test the service and share their energy data.
 
 | User    | Smart Meter ID  | Power Supplier        |
-|---------|-----------------|-----------------------|
+| ------- | --------------- | --------------------- |
 | Sarah   | `smart-meter-0` | Dr Evil's Dark Energy |
 | Peter   | `smart-meter-1` | The Green Eco         |
 | Charlie | `smart-meter-2` | Dr Evil's Dark Energy |
@@ -52,7 +52,7 @@ JOI Energy is a new energy company that uses data to ensure customers are able t
 
 ## API
 
-Below is a list of API endpoints with their respective input and output.  Please note that the application needs to be running.  For more information about how to run the application, please refer to [run the application](#run-the-application) section below.
+Below is a list of API endpoints with their respective input and output. Please note that the application needs to be running. For more information about how to run the application, please refer to [run the application](#run-the-application) section below.
 
 ### Store Readings
 
@@ -68,8 +68,8 @@ Example of body
 {
     "smartMeterId": <smartMeterId>,
     "electricityReadings": [
-        { "time": <timestamp>, "reading": <reading> },
-        { "time": <timestamp>, "reading": <reading> },
+        { "time": <time>, "reading": <reading> },
+        { "time": <time>, "reading": <reading> },
         ...
     ]
 }
@@ -77,16 +77,16 @@ Example of body
 
 Parameters
 
-| Parameter      | Description                                |
-|----------------|--------------------------------------------|
-| `smartMeterId` | One of the smart meters' id listed above   |
-| `timestamp`    | The time when the *delta* is measured      |
-| `reading`      | The *delta* reading since the last reading |
+| Parameter      | Description                                           |
+| -------------- | ----------------------------------------------------- |
+| `smartMeterId` | One of the smart meters' id listed above              |
+| `time`         | The date/time (as epoch) when the _delta_ is measured |
+| `reading`      | The _delta_ reading since the last reading            |
 
 Example readings
 
 | Date (`GMT`)      | Epoch timestamp | Reading (`kW`) |
-|-------------------|----------------:|---------------:|
+| ----------------- | --------------: | -------------: |
 | `2020-11-11 8:00` |      1605081600 |         0.0503 |
 | `2020-11-12 8:00` |      1605168000 |         0.0213 |
 
@@ -115,7 +115,7 @@ GET /readings/read/<smartMeterId>
 Parameters
 
 | Parameter      | Description                              |
-|----------------|------------------------------------------|
+| -------------- | ---------------------------------------- |
 | `smartMeterId` | One of the smart meters' id listed above |
 
 Retrieving readings using CURL
@@ -145,7 +145,7 @@ GET /price-plans/compare-all/<smartMeterId>
 Parameters
 
 | Parameter      | Description                              |
-|----------------|------------------------------------------|
+| -------------- | ---------------------------------------- |
 | `smartMeterId` | One of the smart meters' id listed above |
 
 Retrieving readings using CURL
@@ -178,7 +178,7 @@ GET /price-plans/recommend/<smartMeterId>[?limit=<limit>]
 Parameters
 
 | Parameter      | Description                                          |
-|----------------|------------------------------------------------------|
+| -------------- | ---------------------------------------------------- |
 | `smartMeterId` | One of the smart meters' id listed above             |
 | `limit`        | (Optional) limit the number of plans to be displayed |
 
@@ -227,7 +227,7 @@ Compiles the project, runs the test and then created an executable JAR file
 $ ./gradlew build
 ```
 
-Run the application using Java and the executable JAR file produced by the Gradle `build` task.  The application will be listening to port `8080`.
+Run the application using Java and the executable JAR file produced by the Gradle `build` task. The application will be listening to port `8080`.
 
 ```console
 $ java -jar build/libs/tw-energy.jar
@@ -235,7 +235,7 @@ $ java -jar build/libs/tw-energy.jar
 
 ### Run the tests
 
-There are two types of tests, the unit tests and the functional tests.  These can be executed as follows.
+There are two types of tests, the unit tests and the functional tests. These can be executed as follows.
 
 - Run unit tests only
 
