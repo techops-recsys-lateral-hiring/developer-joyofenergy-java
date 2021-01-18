@@ -1,6 +1,6 @@
 # Welcome to PowerDale
 
-PowerDale is a small town with around 100 residents. Most houses have a smart meter installed that can save and send information about how much energy a house has used.
+PowerDale is a small town with around 100 residents. Most houses have a smart meter installed that can save and send information about how much energy a house is using.
 
 There are three major providers of energy in town that charge different amounts for the power they supply.
 
@@ -52,7 +52,7 @@ JOI Energy is a new energy company that uses data to ensure customers are able t
 
 ## API
 
-Below is a list of API endpoints with their respective input and output. Please note that the application needs to be running. For more information about how to run the application, please refer to [run the application](#run-the-application) section below.
+Below is a list of API endpoints with their respective input and output. Please note that the application needs to be running for the following endpoints to work. For more information about how to run the application, please refer to [run the application](#run-the-application) section below.
 
 ### Store Readings
 
@@ -77,11 +77,11 @@ Example of body
 
 Parameters
 
-| Parameter      | Description                                           |
-| -------------- | ----------------------------------------------------- |
-| `smartMeterId` | One of the smart meters' id listed above              |
-| `time`         | The date/time (as epoch) when the _delta_ is measured |
-| `reading`      | The _delta_ reading since the last reading            |
+| Parameter      | Description                                          |
+| -------------- | ---------------------------------------------------- |
+| `smartMeterId` | One of the smart meters' id listed above             |
+| `time`         | The date/time (as epoch) when the _reading_ is taken |
+| `reading`      | The consumption in `kW` at the _time_ of the reading |
 
 Example readings
 
@@ -90,7 +90,7 @@ Example readings
 | `2020-11-11 8:00` |      1605081600 |         0.0503 |
 | `2020-11-12 8:00` |      1605168000 |         0.0213 |
 
-In the above example, `0.0213 kW` where consumed between `2020-11-11 8:00` and `2020-11-12 8:00`.
+In the above example, `0.0213 kW` were being consumed at `2020-11-12 8:00`. The reading indicates the powered being used at the time of the reading. If no power is being used at the time of reading, then the reading value will be `0`.
 
 Posting readings using CURL
 
