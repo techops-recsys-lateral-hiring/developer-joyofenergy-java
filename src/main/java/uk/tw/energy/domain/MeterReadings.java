@@ -2,23 +2,21 @@ package uk.tw.energy.domain;
 
 import java.util.List;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@AllArgsConstructor
+@Data
+@NoArgsConstructor
 public class MeterReadings {
 
-    private List<ElectricityReading> electricityReadings;
-    private String smartMeterId;
+	@NotBlank
+	private String smartMeterId;
+	@NotEmpty
+	private List<ElectricityReading> electricityReadings;
 
-    public MeterReadings() { }
-
-    public MeterReadings(String smartMeterId, List<ElectricityReading> electricityReadings) {
-        this.smartMeterId = smartMeterId;
-        this.electricityReadings = electricityReadings;
-    }
-
-    public List<ElectricityReading> getElectricityReadings() {
-        return electricityReadings;
-    }
-
-    public String getSmartMeterId() {
-        return smartMeterId;
-    }
 }

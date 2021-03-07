@@ -117,7 +117,7 @@ Below is a list of API endpoints with their respective input and output. Please 
 Endpoint
 
 ```text
-POST /readings/store
+POST /v1/readings
 ```
 
 Example of body
@@ -156,7 +156,7 @@ Posting readings using CURL
 $ curl \
   -X POST \
   -H "Content-Type: application/json" \
-  "http://localhost:8080/readings/store" \
+  "http://localhost:8080/v1/readings" \
   -d '{"smartMeterId":"smart-meter-0","electricityReadings":[{"time":1605081600,"reading":0.0503},{"time":1605168000,"reading":0.0213}]}'
 ```
 
@@ -167,7 +167,7 @@ The above command does not return anything.
 Endpoint
 
 ```text
-GET /readings/read/<smartMeterId>
+GET /v1/readings/<smartMeterId>
 ```
 
 Parameters
@@ -179,7 +179,7 @@ Parameters
 Retrieving readings using CURL
 
 ```console
-$ curl "http://localhost:8080/readings/read/smart-meter-0"
+$ curl "http://localhost:8080/v1/readings/smart-meter-0"
 ```
 
 Example output
@@ -197,7 +197,7 @@ Example output
 Endpoint
 
 ```text
-GET /price-plans/compare-all/<smartMeterId>
+GET /v1/price-plans/comparison/<smartMeterId>
 ```
 
 Parameters
@@ -209,7 +209,7 @@ Parameters
 Retrieving readings using CURL
 
 ```console
-$ curl "http://localhost:8080/price-plans/compare-all/smart-meter-0"
+$ curl "http://localhost:8080/v1/price-plans/comparison/smart-meter-0"
 ```
 
 Example output
@@ -230,7 +230,7 @@ Example output
 Endpoint
 
 ```text
-GET /price-plans/recommend/<smartMeterId>[?limit=<limit>]
+GET /v1/price-plans/recommended/<smartMeterId>[?limit=<limit>]
 ```
 
 Parameters
@@ -243,7 +243,7 @@ Parameters
 Retrieving readings using CURL
 
 ```console
-$ curl "http://localhost:8080/price-plans/recommend/smart-meter-0?limit=2"
+$ curl "http://localhost:8080/v1/price-plans/recommended/smart-meter-0?limit=2"
 ```
 
 Example output

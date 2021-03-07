@@ -138,4 +138,10 @@ gradle-app.setting
 # # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
 # gradle/wrapper/gradle-wrapper.properties
 
+# STS, ECLIPSE
+.project
+.settings/
+.classpath
+bin/
+
 # End of https://www.gitignore.io/api/osx,macos,gradle,windows,intellij

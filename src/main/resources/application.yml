@@ -1,0 +1,10 @@
+# Project Name
+spring:
+   application:
+      name: JOI-ENERGY
+
+# Actuator Health Checks
+management:
+   security:
+      enabled: false
+   port: 8089

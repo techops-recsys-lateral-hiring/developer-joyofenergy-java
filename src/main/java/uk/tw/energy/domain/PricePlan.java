@@ -5,49 +5,27 @@ import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+@Data
+@AllArgsConstructor
 public class PricePlan {
 
-    private final String energySupplier;
-    private final String planName;
-    private final BigDecimal unitRate; // unit price per kWh
-    private final List<PeakTimeMultiplier> peakTimeMultipliers;
+	private final String energySupplier;
+	private final String planName;
+	private final BigDecimal unitRate; // unit price per kWh
+	private final List<PeakTimeMultiplier> peakTimeMultipliers;
 
-    public PricePlan(String planName, String energySupplier, BigDecimal unitRate, List<PeakTimeMultiplier> peakTimeMultipliers) {
-        this.planName = planName;
-        this.energySupplier = energySupplier;
-        this.unitRate = unitRate;
-        this.peakTimeMultipliers = peakTimeMultipliers;
-    }
+	public BigDecimal getPrice(LocalDateTime dateTime) {
+		return peakTimeMultipliers.stream().filter(multiplier -> multiplier.dayOfWeek.equals(dateTime.getDayOfWeek()))
+				.findFirst().map(multiplier -> unitRate.multiply(multiplier.multiplier)).orElse(unitRate);
+	}
 
-    public String getEnergySupplier() {
-        return energySupplier;
-    }
+	@AllArgsConstructor
+	static class PeakTimeMultiplier {
 
-    public String getPlanName() {
-        return planName;
-    }
-
-    public BigDecimal getUnitRate() {
-        return unitRate;
-    }
-
-    public BigDecimal getPrice(LocalDateTime dateTime) {
-        return peakTimeMultipliers.stream()
-                .filter(multiplier -> multiplier.dayOfWeek.equals(dateTime.getDayOfWeek()))
-                .findFirst()
-                .map(multiplier -> unitRate.multiply(multiplier.multiplier))
-                .orElse(unitRate);
-    }
-
-
-    static class PeakTimeMultiplier {
-
-        DayOfWeek dayOfWeek;
-        BigDecimal multiplier;
-
-        public PeakTimeMultiplier(DayOfWeek dayOfWeek, BigDecimal multiplier) {
-            this.dayOfWeek = dayOfWeek;
-            this.multiplier = multiplier;
-        }
-    }
+		private DayOfWeek dayOfWeek;
+		private BigDecimal multiplier;
+	}
 }
