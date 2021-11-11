@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import uk.tw.energy.domain.ElectricityReading;
 import uk.tw.energy.domain.MeterReadings;
+import uk.tw.energy.dto.MeterReadingsDto;
 import uk.tw.energy.service.MeterReadingService;
 
 import java.util.List;
@@ -26,7 +27,7 @@ public class MeterReadingController {
     }
 
     @PostMapping("/store")
-    public ResponseEntity storeReadings(@RequestBody MeterReadings meterReadings) {
+    public ResponseEntity<Void> storeReadings(@RequestBody MeterReadings meterReadings) {
         if (!isMeterReadingsValid(meterReadings)) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -42,10 +43,11 @@ public class MeterReadingController {
     }
 
     @GetMapping("/read/{smartMeterId}")
-    public ResponseEntity readReadings(@PathVariable String smartMeterId) {
+    public ResponseEntity<MeterReadingsDto> readReadings(@PathVariable String smartMeterId) {
         Optional<List<ElectricityReading>> readings = meterReadingService.getReadings(smartMeterId);
-        return readings.isPresent()
-                ? ResponseEntity.ok(readings.get())
-                : ResponseEntity.notFound().build();
+        if (!readings.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(new MeterReadingsDto(readings.get()));
     }
 }
