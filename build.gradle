@@ -5,7 +5,7 @@ plugins {
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 }
 
-ext['log4j2.version'] = "2.16.0"         // mitigate https://www.cve.org/CVERecord?id=CVE-2021-44228
+ext['log4j2.version'] = "2.17.0"         // mitigates various vulnerabilities in log4j
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
