@@ -7,7 +7,7 @@ import uk.tw.energy.domain.PricePlan;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Duration;
-import java.util.Comparator;
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -52,14 +52,18 @@ public class PricePlanService {
     }
 
     private BigDecimal calculateTimeElapsed(List<ElectricityReading> electricityReadings) {
-        ElectricityReading first = electricityReadings.stream()
-                .min(Comparator.comparing(ElectricityReading::getTime))
-                .get();
-        ElectricityReading last = electricityReadings.stream()
-                .max(Comparator.comparing(ElectricityReading::getTime))
-                .get();
+        Instant startTime = Instant.MAX;
+        Instant endTime = Instant.MIN;
+        for (ElectricityReading electricityReading : electricityReadings) {
+            if (startTime.isAfter(electricityReading.getTime())) {
+                startTime = electricityReading.getTime();
+            }
+            if (endTime.isBefore(electricityReading.getTime())) {
+                endTime = electricityReading.getTime();
+            }
+        }
 
-        return BigDecimal.valueOf(Duration.between(first.getTime(), last.getTime()).getSeconds() / 3600.0);
+        return BigDecimal.valueOf(Duration.between(startTime, endTime).getSeconds() / 3600.0);
     }
 
 }

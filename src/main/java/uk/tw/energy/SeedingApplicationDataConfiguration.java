@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static java.util.Collections.emptyList;
 
@@ -36,7 +37,7 @@ public class SeedingApplicationDataConfiguration {
 
     @Bean
     public Map<String, List<ElectricityReading>> perMeterElectricityReadings() {
-        final Map<String, List<ElectricityReading>> readings = new HashMap<>();
+        final Map<String, List<ElectricityReading>> readings = new ConcurrentHashMap<>();
         final ElectricityReadingsGenerator electricityReadingsGenerator = new ElectricityReadingsGenerator();
         smartMeterToPricePlanAccounts()
                 .keySet()

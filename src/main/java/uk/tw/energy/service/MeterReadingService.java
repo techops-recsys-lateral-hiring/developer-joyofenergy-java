@@ -22,9 +22,12 @@ public class MeterReadingService {
     }
 
     public void storeReadings(String smartMeterId, List<ElectricityReading> electricityReadings) {
-        if (!meterAssociatedReadings.containsKey(smartMeterId)) {
-            meterAssociatedReadings.put(smartMeterId, new ArrayList<>());
-        }
-        meterAssociatedReadings.get(smartMeterId).addAll(electricityReadings);
+        meterAssociatedReadings.compute(smartMeterId, (key, value) -> {
+            if (value == null) {
+                value = new ArrayList<>();
+            }
+            value.addAll(electricityReadings);
+            return value;
+        });
     }
 }

@@ -21,8 +21,8 @@ import java.util.Optional;
 @RequestMapping("/price-plans")
 public class PricePlanComparatorController {
 
-    public final static String PRICE_PLAN_ID_KEY = "pricePlanId";
-    public final static String PRICE_PLAN_COMPARISONS_KEY = "pricePlanComparisons";
+    public static final String PRICE_PLAN_ID_KEY = "pricePlanId";
+    public static final String PRICE_PLAN_COMPARISONS_KEY = "pricePlanComparisons";
     private final PricePlanService pricePlanService;
     private final AccountService accountService;
 
@@ -45,9 +45,7 @@ public class PricePlanComparatorController {
         pricePlanComparisons.put(PRICE_PLAN_ID_KEY, pricePlanId);
         pricePlanComparisons.put(PRICE_PLAN_COMPARISONS_KEY, consumptionsForPricePlans.get());
 
-        return consumptionsForPricePlans.isPresent()
-                ? ResponseEntity.ok(pricePlanComparisons)
-                : ResponseEntity.notFound().build();
+        return ResponseEntity.ok(pricePlanComparisons);
     }
 
     @GetMapping("/recommend/{smartMeterId}")
