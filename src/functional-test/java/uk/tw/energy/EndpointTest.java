@@ -15,9 +15,12 @@ import uk.tw.energy.builders.MeterReadingsBuilder;
 import uk.tw.energy.domain.MeterReadings;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.security.NoSuchAlgorithmException;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = App.class)
-public class EndpointTest {
+class EndpointTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -25,17 +28,22 @@ public class EndpointTest {
     private ObjectMapper mapper;
 
     @Test
-    public void shouldStoreReadings() throws JsonProcessingException {
-        MeterReadings meterReadings = new MeterReadingsBuilder().generateElectricityReadings().build();
-        HttpEntity<String> entity = getStringHttpEntity(meterReadings);
+    void shouldStoreReadings() throws JsonProcessingException {
+        try {
+            MeterReadings meterReadings = new MeterReadingsBuilder().generateElectricityReadings().build();
+            HttpEntity<String> entity = getStringHttpEntity(meterReadings);
 
-        ResponseEntity<String> response = restTemplate.postForEntity("/readings/store", entity, String.class);
+            ResponseEntity<String> response = restTemplate.postForEntity("/readings/store", entity, String.class);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+            assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        } catch (NoSuchAlgorithmException e) {
+            assertTrue(false, "Not exists secure random algorithm");
+        }
+        
     }
 
     @Test
-    public void givenMeterIdShouldReturnAMeterReadingAssociatedWithMeterId() throws JsonProcessingException {
+    void givenMeterIdShouldReturnAMeterReadingAssociatedWithMeterId() throws JsonProcessingException {
         String smartMeterId = "bob";
         populateMeterReadingsForMeter(smartMeterId);
 
@@ -45,7 +53,7 @@ public class EndpointTest {
     }
 
     @Test
-    public void shouldCalculateAllPrices() throws JsonProcessingException {
+    void shouldCalculateAllPrices() throws JsonProcessingException {
         String smartMeterId = "bob";
         populateMeterReadingsForMeter(smartMeterId);
 
@@ -55,7 +63,7 @@ public class EndpointTest {
     }
 
     @Test
-    public void givenMeterIdAndLimitShouldReturnRecommendedCheapestPricePlans() throws JsonProcessingException {
+    void givenMeterIdAndLimitShouldReturnRecommendedCheapestPricePlans() throws JsonProcessingException {
         String smartMeterId = "bob";
         populateMeterReadingsForMeter(smartMeterId);
 
@@ -72,11 +80,16 @@ public class EndpointTest {
     }
 
     private void populateMeterReadingsForMeter(String smartMeterId) throws JsonProcessingException {
-        MeterReadings readings = new MeterReadingsBuilder().setSmartMeterId(smartMeterId)
-                .generateElectricityReadings(20)
-                .build();
+        try {
+            MeterReadings readings = new MeterReadingsBuilder().setSmartMeterId(smartMeterId)
+                    .generateElectricityReadings(20)
+                    .build();
+            HttpEntity<String> entity = getStringHttpEntity(readings);
+            restTemplate.postForEntity("/readings/store", entity, String.class);
+        } catch (NoSuchAlgorithmException e) {
+            assertTrue(false, "Not exists secure random algorithm");
+        }
 
-        HttpEntity<String> entity = getStringHttpEntity(readings);
-        restTemplate.postForEntity("/readings/store", entity, String.class);
+        
     }
 }

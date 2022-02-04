@@ -3,6 +3,16 @@ plugins {
     id 'idea'
     id 'org.springframework.boot' version '2.6.1'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id "org.sonarqube" version "3.3"
+    id 'jacoco'
+}
+
+sonarqube {
+  properties {
+    property "sonar.projectKey", "barahonachrism_joi-energy-java-cb"
+    property "sonar.organization", "barahonachrism"
+    property "sonar.host.url", "https://sonarcloud.io"
+  }
 }
 
 ext['log4j2.version'] = "2.17.0"         // mitigates various vulnerabilities in log4j
@@ -52,6 +62,24 @@ task functionalTest(type: Test) {
     testLogging {
         events = ['FAILED', 'PASSED', 'SKIPPED', 'STANDARD_OUT']
     }
+
+    dependsOn test
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    dependsOn functionalTest // tests are required to run before generating the 
+    reports {
+        xml.enabled true
+        csv.enabled false
+        html.enabled true
+    }
+
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: ['uk/tw/energy/App.*','uk/tw/energy/SeedingApplicationDataConfiguration.*'])
+        }))
+    }
 }
 
 dependencies {
@@ -69,6 +97,8 @@ test {
         events = ['FAILED', 'PASSED', 'SKIPPED', 'STANDARD_OUT']
     }
 }
+
+
 
 check {
     dependsOn functionalTest
