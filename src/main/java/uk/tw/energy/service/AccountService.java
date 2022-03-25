@@ -13,7 +13,7 @@ public class AccountService {
         this.smartMeterToPricePlanAccounts = smartMeterToPricePlanAccounts;
     }
 
-    public String getPricePlanIdForSmartMeterId(String smartMeterId) {
+    public String getPlanIdForSmartMeterId(String smartMeterId) {
         return smartMeterToPricePlanAccounts.get(smartMeterId);
     }
 }

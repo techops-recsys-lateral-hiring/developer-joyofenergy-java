@@ -21,4 +21,11 @@ public class MeterReadings {
     public String getSmartMeterId() {
         return smartMeterId;
     }
+
+    public boolean isValid() {
+        String smartMeterId = getSmartMeterId();
+        List<ElectricityReading> electricityReadings = getElectricityReadings();
+        return smartMeterId != null && !smartMeterId.isEmpty()
+                && electricityReadings != null && !electricityReadings.isEmpty();
+    }
 }

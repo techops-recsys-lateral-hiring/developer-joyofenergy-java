@@ -43,7 +43,8 @@ public class PowerSupplierComparatorControllerTest {
         costCalculationService = new CostCalculationService();
 
         List<PowerSupplier> powerSuppliers = Arrays.asList(powerSupplier1, powerSupplier2, powerSupplier3);
-        PowerSupplierComparatorService comparatorService = new PowerSupplierComparatorService(powerSuppliers, meterReadingService, costCalculationService);
+        PowerSupplierComparatorService comparatorService = new PowerSupplierComparatorService(powerSuppliers, meterReadingService);
+        comparatorService.setCostCalculationService(costCalculationService);
 
         Map<String, String> meterToTariffs = new HashMap<>();
         meterToTariffs.put(SMART_METER_ID, PRICE_PLAN_1_ID);
@@ -82,7 +83,7 @@ public class PowerSupplierComparatorControllerTest {
         expectedPricePlanToCost.add(new AbstractMap.SimpleEntry<>(PRICE_PLAN_3_ID, BigDecimal.valueOf(76.0)));
         expectedPricePlanToCost.add(new AbstractMap.SimpleEntry<>(PRICE_PLAN_1_ID, BigDecimal.valueOf(380.0)));
 
-        assertThat(controller.recommendCheapestPricePlans(SMART_METER_ID, null).getBody()).isEqualTo(expectedPricePlanToCost);
+        assertThat(controller.recommendCheapestPlans(SMART_METER_ID, null).getBody()).isEqualTo(expectedPricePlanToCost);
     }
 
 
@@ -97,7 +98,7 @@ public class PowerSupplierComparatorControllerTest {
         expectedPricePlanToCost.add(new AbstractMap.SimpleEntry<>(PRICE_PLAN_2_ID, BigDecimal.valueOf(16.7)));
         expectedPricePlanToCost.add(new AbstractMap.SimpleEntry<>(PRICE_PLAN_3_ID, BigDecimal.valueOf(33.4)));
 
-        assertThat(controller.recommendCheapestPricePlans(SMART_METER_ID, 2).getBody()).isEqualTo(expectedPricePlanToCost);
+        assertThat(controller.recommendCheapestPlans(SMART_METER_ID, 2).getBody()).isEqualTo(expectedPricePlanToCost);
     }
 
     @Test
@@ -112,7 +113,7 @@ public class PowerSupplierComparatorControllerTest {
         expectedPricePlanToCost.add(new AbstractMap.SimpleEntry<>(PRICE_PLAN_3_ID, BigDecimal.valueOf(28.0)));
         expectedPricePlanToCost.add(new AbstractMap.SimpleEntry<>(PRICE_PLAN_1_ID, BigDecimal.valueOf(140.0)));
 
-        assertThat(controller.recommendCheapestPricePlans(SMART_METER_ID, 5).getBody()).isEqualTo(expectedPricePlanToCost);
+        assertThat(controller.recommendCheapestPlans(SMART_METER_ID, 5).getBody()).isEqualTo(expectedPricePlanToCost);
     }
 
     @Test

@@ -1,5 +1,6 @@
 package uk.tw.energy.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.tw.energy.domain.ElectricityReading;
 import uk.tw.energy.domain.PowerSupplier;
@@ -15,16 +16,19 @@ public class PowerSupplierComparatorService {
 
     private final List<PowerSupplier> powerSuppliers;
     private final MeterReadingService meterReadingService;
-    private final CostCalculationService costCalculationService;
+    private CostCalculationService costCalculationService;
 
-    public PowerSupplierComparatorService(List<PowerSupplier> powerSuppliers, MeterReadingService meterReadingService, CostCalculationService costCalculationService) {
+    public PowerSupplierComparatorService(List<PowerSupplier> powerSuppliers, MeterReadingService meterReadingService) {
         this.powerSuppliers = powerSuppliers;
         this.meterReadingService = meterReadingService;
+    }
+
+    @Autowired
+    public void setCostCalculationService(CostCalculationService costCalculationService) {
         this.costCalculationService = costCalculationService;
     }
 
-    //TODO: could be renamed to getConsumptionCostForAllTariff
-    public Optional<Map<String, BigDecimal>> getConsumptionCostOfElectricityReadingsForEachPricePlan(String smartMeterId) {
+    public Optional<Map<String, BigDecimal>> getPowerConsumptionCostForAllPlans(String smartMeterId) {
         Optional<List<ElectricityReading>> electricityReadings = meterReadingService.getReadings(smartMeterId);
 
         if (!electricityReadings.isPresent()) {

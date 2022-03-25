@@ -22,9 +22,9 @@ import static java.util.Collections.emptyList;
 @Configuration
 public class SeedingApplicationDataConfiguration {
 
-    private static final String MOST_EVIL_PRICE_PLAN_ID = "price-plan-0";
-    private static final String RENEWABLES_PRICE_PLAN_ID = "price-plan-1";
-    private static final String STANDARD_PRICE_PLAN_ID = "price-plan-2";
+    private static final String MOST_EVIL_PRICE_PLAN_ID = "plan-0";
+    private static final String RENEWABLES_PRICE_PLAN_ID = "plan-1";
+    private static final String STANDARD_PRICE_PLAN_ID = "plan-2";
 
     @Bean
     public List<PowerSupplier> pricePlans() {
