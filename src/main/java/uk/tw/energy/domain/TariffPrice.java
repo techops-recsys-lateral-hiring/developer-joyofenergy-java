@@ -5,26 +5,13 @@ import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class PricePlan {
-
-    private final String energySupplier;
-    private final String planName;
+public class TariffPrice {
     private final BigDecimal unitRate; // unit price per kWh
-    private final List<PeakTimeMultiplier> peakTimeMultipliers;
+    private final List<TariffPrice.PeakTimeMultiplier> peakTimeMultipliers;
 
-    public PricePlan(String planName, String energySupplier, BigDecimal unitRate, List<PeakTimeMultiplier> peakTimeMultipliers) {
-        this.planName = planName;
-        this.energySupplier = energySupplier;
+    public TariffPrice(BigDecimal unitRate, List<TariffPrice.PeakTimeMultiplier> peakTimeMultipliers) {
         this.unitRate = unitRate;
         this.peakTimeMultipliers = peakTimeMultipliers;
-    }
-
-    public String getEnergySupplier() {
-        return energySupplier;
-    }
-
-    public String getPlanName() {
-        return planName;
     }
 
     public BigDecimal getUnitRate() {
@@ -38,7 +25,6 @@ public class PricePlan {
                 .map(multiplier -> unitRate.multiply(multiplier.multiplier))
                 .orElse(unitRate);
     }
-
 
     static class PeakTimeMultiplier {
 
