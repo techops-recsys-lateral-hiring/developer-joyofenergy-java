@@ -27,7 +27,7 @@ public class SeedingApplicationDataConfiguration {
     private static final String STANDARD_PRICE_PLAN_ID = "plan-2";
 
     @Bean
-    public List<PowerSupplier> pricePlans() {
+    public List<PowerSupplier> powerSupplierPlans() {
         final List<PowerSupplier> powerSuppliers = new ArrayList<>();
         powerSuppliers.add(new PowerSupplier(MOST_EVIL_PRICE_PLAN_ID, "Dr Evil's Dark Energy", new PlanPrice(BigDecimal.TEN, emptyList())));
         powerSuppliers.add(new PowerSupplier(RENEWABLES_PRICE_PLAN_ID, "The Green Eco", new PlanPrice(BigDecimal.valueOf(2), emptyList())));

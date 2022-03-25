@@ -1,6 +1,7 @@
 package uk.tw.energy.domain;
 
 import java.util.List;
+import java.util.Objects;
 
 public class MeterReadings {
 
@@ -23,9 +24,7 @@ public class MeterReadings {
     }
 
     public boolean isValid() {
-        String smartMeterId = getSmartMeterId();
-        List<ElectricityReading> electricityReadings = getElectricityReadings();
-        return smartMeterId != null && !smartMeterId.isEmpty()
-                && electricityReadings != null && !electricityReadings.isEmpty();
+        return Objects.nonNull(smartMeterId)  && !smartMeterId.isEmpty()
+                && Objects.nonNull(electricityReadings) && !electricityReadings.isEmpty();
     }
 }
