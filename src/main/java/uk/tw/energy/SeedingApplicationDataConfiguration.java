@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import uk.tw.energy.domain.ElectricityReading;
 import uk.tw.energy.domain.PowerSupplier;
-import uk.tw.energy.domain.TariffPrice;
+import uk.tw.energy.domain.PlanPrice;
 import uk.tw.energy.generator.ElectricityReadingsGenerator;
 
 import java.math.BigDecimal;
@@ -29,9 +29,9 @@ public class SeedingApplicationDataConfiguration {
     @Bean
     public List<PowerSupplier> pricePlans() {
         final List<PowerSupplier> powerSuppliers = new ArrayList<>();
-        powerSuppliers.add(new PowerSupplier(MOST_EVIL_PRICE_PLAN_ID, "Dr Evil's Dark Energy", new TariffPrice(BigDecimal.TEN, emptyList())));
-        powerSuppliers.add(new PowerSupplier(RENEWABLES_PRICE_PLAN_ID, "The Green Eco", new TariffPrice(BigDecimal.valueOf(2), emptyList())));
-        powerSuppliers.add(new PowerSupplier(STANDARD_PRICE_PLAN_ID, "Power for Everyone", new TariffPrice(BigDecimal.ONE, emptyList())));
+        powerSuppliers.add(new PowerSupplier(MOST_EVIL_PRICE_PLAN_ID, "Dr Evil's Dark Energy", new PlanPrice(BigDecimal.TEN, emptyList())));
+        powerSuppliers.add(new PowerSupplier(RENEWABLES_PRICE_PLAN_ID, "The Green Eco", new PlanPrice(BigDecimal.valueOf(2), emptyList())));
+        powerSuppliers.add(new PowerSupplier(STANDARD_PRICE_PLAN_ID, "Power for Everyone", new PlanPrice(BigDecimal.ONE, emptyList())));
         return powerSuppliers;
     }
 

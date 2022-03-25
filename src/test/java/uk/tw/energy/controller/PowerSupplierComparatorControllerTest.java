@@ -5,8 +5,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import uk.tw.energy.domain.ElectricityReading;
 import uk.tw.energy.domain.PowerSupplier;
-import uk.tw.energy.domain.TariffPrice;
+import uk.tw.energy.domain.PlanPrice;
 import uk.tw.energy.service.AccountService;
+import uk.tw.energy.service.CostCalculationService;
 import uk.tw.energy.service.MeterReadingService;
 import uk.tw.energy.service.PowerSupplierComparatorService;
 
@@ -28,24 +29,27 @@ public class PowerSupplierComparatorControllerTest {
     private static final String PRICE_PLAN_3_ID = "second-best-supplier";
     private static final String SMART_METER_ID = "smart-meter-id";
     private PowerSupplierComparatorController controller;
+    private CostCalculationService costCalculationService;
     private MeterReadingService meterReadingService;
     private AccountService accountService;
 
     @BeforeEach
     public void setUp() {
         meterReadingService = new MeterReadingService(new HashMap<>());
-        PowerSupplier powerSupplier1 = new PowerSupplier(PRICE_PLAN_1_ID, null, new TariffPrice(BigDecimal.TEN, null));
-        PowerSupplier powerSupplier2 = new PowerSupplier(PRICE_PLAN_2_ID, null, new TariffPrice(BigDecimal.ONE, null));
-        PowerSupplier powerSupplier3 = new PowerSupplier(PRICE_PLAN_3_ID, null, new TariffPrice(BigDecimal.valueOf(2), null));
+        PowerSupplier powerSupplier1 = new PowerSupplier(PRICE_PLAN_1_ID, null, new PlanPrice(BigDecimal.TEN, null));
+        PowerSupplier powerSupplier2 = new PowerSupplier(PRICE_PLAN_2_ID, null, new PlanPrice(BigDecimal.ONE, null));
+        PowerSupplier powerSupplier3 = new PowerSupplier(PRICE_PLAN_3_ID, null, new PlanPrice(BigDecimal.valueOf(2), null));
+
+        costCalculationService = new CostCalculationService();
 
         List<PowerSupplier> powerSuppliers = Arrays.asList(powerSupplier1, powerSupplier2, powerSupplier3);
-        PowerSupplierComparatorService tariffService = new PowerSupplierComparatorService(powerSuppliers, meterReadingService);
+        PowerSupplierComparatorService comparatorService = new PowerSupplierComparatorService(powerSuppliers, meterReadingService, costCalculationService);
 
         Map<String, String> meterToTariffs = new HashMap<>();
         meterToTariffs.put(SMART_METER_ID, PRICE_PLAN_1_ID);
         accountService = new AccountService(meterToTariffs);
 
-        controller = new PowerSupplierComparatorController(tariffService, accountService);
+        controller = new PowerSupplierComparatorController(comparatorService, accountService);
     }
 
     @Test

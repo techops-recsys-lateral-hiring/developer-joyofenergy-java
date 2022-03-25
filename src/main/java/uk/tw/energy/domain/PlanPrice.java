@@ -5,11 +5,11 @@ import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class TariffPrice {
+public class PlanPrice {
     private final BigDecimal unitRate; // unit price per kWh
-    private final List<TariffPrice.PeakTimeMultiplier> peakTimeMultipliers;
+    private final List<PlanPrice.PeakTimeMultiplier> peakTimeMultipliers;
 
-    public TariffPrice(BigDecimal unitRate, List<TariffPrice.PeakTimeMultiplier> peakTimeMultipliers) {
+    public PlanPrice(BigDecimal unitRate, List<PlanPrice.PeakTimeMultiplier> peakTimeMultipliers) {
         this.unitRate = unitRate;
         this.peakTimeMultipliers = peakTimeMultipliers;
     }

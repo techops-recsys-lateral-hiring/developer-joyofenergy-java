@@ -7,12 +7,12 @@ public class PowerSupplier {
 
     private final String supplier;
     private final String planName;
-    private TariffPrice tariffPrice;
+    private PlanPrice planPrice;
 
-    public PowerSupplier(String planName, String supplier, TariffPrice tariffPrice) {
+    public PowerSupplier(String planName, String supplier, PlanPrice planPrice) {
         this.planName = planName;
         this.supplier = supplier;
-        this.tariffPrice = tariffPrice;
+        this.planPrice = planPrice;
     }
 
     public String getSupplier() {
@@ -24,11 +24,11 @@ public class PowerSupplier {
     }
 
     public BigDecimal getUnitRate() {
-        return tariffPrice.getUnitRate();
+        return planPrice.getUnitRate();
     }
 
     public BigDecimal getPrice(LocalDateTime dateTime) {
-        return tariffPrice.getPrice(dateTime);
+        return planPrice.getPrice(dateTime);
     }
 
 }

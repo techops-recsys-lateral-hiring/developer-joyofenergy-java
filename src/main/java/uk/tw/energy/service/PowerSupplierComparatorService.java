@@ -15,7 +15,6 @@ public class PowerSupplierComparatorService {
 
     private final List<PowerSupplier> powerSuppliers;
     private final MeterReadingService meterReadingService;
-
     private final CostCalculationService costCalculationService;
 
     public PowerSupplierComparatorService(List<PowerSupplier> powerSuppliers, MeterReadingService meterReadingService, CostCalculationService costCalculationService) {

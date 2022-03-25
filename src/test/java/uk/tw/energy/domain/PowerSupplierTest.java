@@ -19,7 +19,7 @@ public class PowerSupplierTest {
 
     @Test
     public void shouldReturnTheEnergySupplierGivenInTheConstructor() {
-        PowerSupplier powerSupplier = new PowerSupplier(null, ENERGY_SUPPLIER_NAME, new TariffPrice(null, null));
+        PowerSupplier powerSupplier = new PowerSupplier(null, ENERGY_SUPPLIER_NAME, new PlanPrice(null, null));
 
         assertThat(powerSupplier.getSupplier()).isEqualTo(ENERGY_SUPPLIER_NAME);
     }
@@ -27,8 +27,8 @@ public class PowerSupplierTest {
     @Test
     public void shouldReturnTheBasePriceGivenAnOrdinaryDateTime() throws Exception {
         LocalDateTime normalDateTime = LocalDateTime.of(2017, Month.AUGUST, 31, 12, 0, 0);
-        TariffPrice.PeakTimeMultiplier peakTimeMultiplier = new TariffPrice.PeakTimeMultiplier(DayOfWeek.WEDNESDAY, BigDecimal.TEN);
-        PowerSupplier powerSupplier = new PowerSupplier(null, null, new TariffPrice(BigDecimal.ONE, singletonList(peakTimeMultiplier)));
+        PlanPrice.PeakTimeMultiplier peakTimeMultiplier = new PlanPrice.PeakTimeMultiplier(DayOfWeek.WEDNESDAY, BigDecimal.TEN);
+        PowerSupplier powerSupplier = new PowerSupplier(null, null, new PlanPrice(BigDecimal.ONE, singletonList(peakTimeMultiplier)));
 
         BigDecimal price = powerSupplier.getPrice(normalDateTime);
 
@@ -38,8 +38,8 @@ public class PowerSupplierTest {
     @Test
     public void shouldReturnAnExceptionPriceGivenExceptionalDateTime() throws Exception {
         LocalDateTime exceptionalDateTime = LocalDateTime.of(2017, Month.AUGUST, 30, 23, 0, 0);
-        TariffPrice.PeakTimeMultiplier peakTimeMultiplier = new TariffPrice.PeakTimeMultiplier(DayOfWeek.WEDNESDAY, BigDecimal.TEN);
-        PowerSupplier powerSupplier = new PowerSupplier(null, null, new TariffPrice(BigDecimal.ONE, singletonList(peakTimeMultiplier)));
+        PlanPrice.PeakTimeMultiplier peakTimeMultiplier = new PlanPrice.PeakTimeMultiplier(DayOfWeek.WEDNESDAY, BigDecimal.TEN);
+        PowerSupplier powerSupplier = new PowerSupplier(null, null, new PlanPrice(BigDecimal.ONE, singletonList(peakTimeMultiplier)));
 
         BigDecimal price = powerSupplier.getPrice(exceptionalDateTime);
 
@@ -49,10 +49,10 @@ public class PowerSupplierTest {
     @Test
     public void shouldReceiveMultipleExceptionalDateTimes() throws Exception {
         LocalDateTime exceptionalDateTime = LocalDateTime.of(2017, Month.AUGUST, 30, 23, 0, 0);
-        TariffPrice.PeakTimeMultiplier peakTimeMultiplier = new TariffPrice.PeakTimeMultiplier(DayOfWeek.WEDNESDAY, BigDecimal.TEN);
-        TariffPrice.PeakTimeMultiplier otherPeakTimeMultiplier = new TariffPrice.PeakTimeMultiplier(DayOfWeek.TUESDAY, BigDecimal.TEN);
-        List<TariffPrice.PeakTimeMultiplier> peakTimeMultipliers = Arrays.asList(peakTimeMultiplier, otherPeakTimeMultiplier);
-        PowerSupplier powerSupplier = new PowerSupplier(null, null, new TariffPrice(BigDecimal.ONE, peakTimeMultipliers));
+        PlanPrice.PeakTimeMultiplier peakTimeMultiplier = new PlanPrice.PeakTimeMultiplier(DayOfWeek.WEDNESDAY, BigDecimal.TEN);
+        PlanPrice.PeakTimeMultiplier otherPeakTimeMultiplier = new PlanPrice.PeakTimeMultiplier(DayOfWeek.TUESDAY, BigDecimal.TEN);
+        List<PlanPrice.PeakTimeMultiplier> peakTimeMultipliers = Arrays.asList(peakTimeMultiplier, otherPeakTimeMultiplier);
+        PowerSupplier powerSupplier = new PowerSupplier(null, null, new PlanPrice(BigDecimal.ONE, peakTimeMultipliers));
 
         BigDecimal price = powerSupplier.getPrice(exceptionalDateTime);
 
