@@ -26,6 +26,7 @@ public class MeterReadingController {
     }
 
     @PostMapping("/store")
+    //TODO: Generic type parameter have to added to not to avoid type check
     public ResponseEntity storeReadings(@RequestBody MeterReadings meterReadings) {
         if (!isMeterReadingsValid(meterReadings)) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -34,6 +35,7 @@ public class MeterReadingController {
         return ResponseEntity.ok().build();
     }
 
+    //TODO: Front controller suppose to not to hold any business logic. Need to moved to service layer
     private boolean isMeterReadingsValid(MeterReadings meterReadings) {
         String smartMeterId = meterReadings.getSmartMeterId();
         List<ElectricityReading> electricityReadings = meterReadings.getElectricityReadings();
@@ -42,6 +44,7 @@ public class MeterReadingController {
     }
 
     @GetMapping("/read/{smartMeterId}")
+    //TODO: Generic type parameter have to added to not to avoid type check
     public ResponseEntity readReadings(@PathVariable String smartMeterId) {
         Optional<List<ElectricityReading>> readings = meterReadingService.getReadings(smartMeterId);
         return readings.isPresent()

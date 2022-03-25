@@ -4,10 +4,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import uk.tw.energy.domain.ElectricityReading;
-import uk.tw.energy.domain.PricePlan;
+import uk.tw.energy.domain.PowerSupplier;
+import uk.tw.energy.domain.TariffPrice;
 import uk.tw.energy.service.AccountService;
 import uk.tw.energy.service.MeterReadingService;
-import uk.tw.energy.service.PricePlanService;
+import uk.tw.energy.service.PowerSupplierComparatorService;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -20,31 +21,31 @@ import java.util.Map;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-public class PricePlanComparatorControllerTest {
+public class PowerSupplierComparatorControllerTest {
 
     private static final String PRICE_PLAN_1_ID = "test-supplier";
     private static final String PRICE_PLAN_2_ID = "best-supplier";
     private static final String PRICE_PLAN_3_ID = "second-best-supplier";
     private static final String SMART_METER_ID = "smart-meter-id";
-    private PricePlanComparatorController controller;
+    private PowerSupplierComparatorController controller;
     private MeterReadingService meterReadingService;
     private AccountService accountService;
 
     @BeforeEach
     public void setUp() {
         meterReadingService = new MeterReadingService(new HashMap<>());
-        PricePlan pricePlan1 = new PricePlan(PRICE_PLAN_1_ID, null, BigDecimal.TEN, null);
-        PricePlan pricePlan2 = new PricePlan(PRICE_PLAN_2_ID, null, BigDecimal.ONE, null);
-        PricePlan pricePlan3 = new PricePlan(PRICE_PLAN_3_ID, null, BigDecimal.valueOf(2), null);
+        PowerSupplier powerSupplier1 = new PowerSupplier(PRICE_PLAN_1_ID, null, new TariffPrice(BigDecimal.TEN, null));
+        PowerSupplier powerSupplier2 = new PowerSupplier(PRICE_PLAN_2_ID, null, new TariffPrice(BigDecimal.ONE, null));
+        PowerSupplier powerSupplier3 = new PowerSupplier(PRICE_PLAN_3_ID, null, new TariffPrice(BigDecimal.valueOf(2), null));
 
-        List<PricePlan> pricePlans = Arrays.asList(pricePlan1, pricePlan2, pricePlan3);
-        PricePlanService tariffService = new PricePlanService(pricePlans, meterReadingService);
+        List<PowerSupplier> powerSuppliers = Arrays.asList(powerSupplier1, powerSupplier2, powerSupplier3);
+        PowerSupplierComparatorService tariffService = new PowerSupplierComparatorService(powerSuppliers, meterReadingService);
 
         Map<String, String> meterToTariffs = new HashMap<>();
         meterToTariffs.put(SMART_METER_ID, PRICE_PLAN_1_ID);
         accountService = new AccountService(meterToTariffs);
 
-        controller = new PricePlanComparatorController(tariffService, accountService);
+        controller = new PowerSupplierComparatorController(tariffService, accountService);
     }
 
     @Test
@@ -60,8 +61,8 @@ public class PricePlanComparatorControllerTest {
         expectedPricePlanToCost.put(PRICE_PLAN_3_ID, BigDecimal.valueOf(20.0));
 
         Map<String, Object> expected = new HashMap<>();
-        expected.put(PricePlanComparatorController.PRICE_PLAN_ID_KEY, PRICE_PLAN_1_ID);
-        expected.put(PricePlanComparatorController.PRICE_PLAN_COMPARISONS_KEY, expectedPricePlanToCost);
+        expected.put(PowerSupplierComparatorController.PRICE_PLAN_ID_KEY, PRICE_PLAN_1_ID);
+        expected.put(PowerSupplierComparatorController.PRICE_PLAN_COMPARISONS_KEY, expectedPricePlanToCost);
         assertThat(controller.calculatedCostForEachPricePlan(SMART_METER_ID).getBody()).isEqualTo(expected);
     }
 
