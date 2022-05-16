@@ -61,5 +61,14 @@ public class PricePlanService {
 
         return BigDecimal.valueOf(Duration.between(first.getTime(), last.getTime()).getSeconds() / 3600.0);
     }
+    
+    public PricePlan fetchPricePlanDetailsThroughPricePlanId(String pricePlan) {
+    	for(PricePlan pricePlanDummy : pricePlans) {
+    		if(pricePlanDummy.getPlanName().equals(pricePlan)) {
+    			return pricePlanDummy;
+    		}
+    	}
+    	return null;
+    }
 
 }

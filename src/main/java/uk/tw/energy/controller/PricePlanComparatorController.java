@@ -8,6 +8,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import uk.tw.energy.service.AccountService;
 import uk.tw.energy.service.PricePlanService;
+import uk.tw.energy.domain.PricePlan;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PostMapping;
+
+
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -69,4 +75,35 @@ public class PricePlanComparatorController {
 
         return ResponseEntity.ok(recommendations);
     }
-}
+    
+    @GetMapping("/viewPricing/{smartMeterId}")
+    public ResponseEntity<Map<String,String>> viewAssociatedPricePlan(@PathVariable String smartMeterId){
+    	
+    	String pricePlanId = accountService.getPricePlanIdForSmartMeterId(smartMeterId);
+    	PricePlan pricePlan = pricePlanService.fetchPricePlanDetailsThroughPricePlanId(pricePlanId);
+    	if(pricePlan == null) {
+    		Map<String, String> badResponse = new HashMap<>();
+    		badResponse.put("Message","Invalid Smart Meter Id, Please check.");
+    		return new ResponseEntity(badResponse,HttpStatus.BAD_REQUEST);
+    	}
+    	
+    	Map<String, String> pricePlanDetails = new HashMap<>();
+    	pricePlanDetails.put("Price Plan ID", pricePlan.getPlanName());
+    	pricePlanDetails.put("Unit Rate", pricePlan.getUnitRate().toString());
+    	pricePlanDetails.put("Energy Supplier", pricePlan.getEnergySupplier());
+    	
+    	return ResponseEntity.ok(pricePlanDetails);
+    }
+    
+    @PostMapping("/select")
+    	 public ResponseEntity selectNewPricePlan(@RequestBody Map<String,String> pricePlanMappedToMeterId) {
+    		 int validOperation = accountService.updatePricePlanForSmartMeterId(pricePlanMappedToMeterId.get("SmartMeterId"),pricePlanMappedToMeterId.get("PricePlan"));
+    		 if(validOperation == 0) {
+    			 Map<String, String> badResponse = new HashMap<>();
+    	    		badResponse.put("Message","Invalid Smart Meter Id or Price Plan. Please check!");
+    	    		return new ResponseEntity(badResponse,HttpStatus.BAD_REQUEST);
+    		 }
+    		 return ResponseEntity.ok("Price Plan changed successfully!");
+    	 }
+    	 
+    }
