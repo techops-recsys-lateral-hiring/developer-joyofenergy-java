@@ -6,7 +6,8 @@ import org.springframework.http.HttpStatus;
 import uk.tw.energy.builders.MeterReadingsBuilder;
 import uk.tw.energy.eletricity.ElectricityReading;
 import uk.tw.energy.eletricity.MeterReadings;
-import uk.tw.energy.service.MeterReadingService;
+import uk.tw.energy.meterreading.MeterReadingController;
+import uk.tw.energy.meterreading.MeterReadingService;
 
 import java.util.ArrayList;
 import java.util.Collections;

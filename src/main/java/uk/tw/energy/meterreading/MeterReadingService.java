@@ -1,4 +1,4 @@
-package uk.tw.energy.service;
+package uk.tw.energy.meterreading;
 
 import org.springframework.stereotype.Service;
 import uk.tw.energy.eletricity.ElectricityReading;

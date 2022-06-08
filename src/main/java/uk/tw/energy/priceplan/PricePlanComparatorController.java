@@ -1,4 +1,4 @@
-package uk.tw.energy.controller;
+package uk.tw.energy.priceplan;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import uk.tw.energy.service.AccountService;
-import uk.tw.energy.service.PricePlanService;
+import uk.tw.energy.priceplan.AccountService;
+import uk.tw.energy.priceplan.PricePlanService;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
