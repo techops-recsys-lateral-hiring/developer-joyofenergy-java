@@ -2,6 +2,7 @@ package uk.tw.energy.domain;
 
 import org.assertj.core.data.Percentage;
 import org.junit.jupiter.api.Test;
+import uk.tw.energy.PricePlan;
 
 import java.math.BigDecimal;
 import java.time.DayOfWeek;

@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import uk.tw.energy.eletricity.ElectricityReading;
-import uk.tw.energy.domain.PricePlan;
+import uk.tw.energy.PricePlan;
 import uk.tw.energy.service.AccountService;
 import uk.tw.energy.service.MeterReadingService;
 import uk.tw.energy.service.PricePlanService;

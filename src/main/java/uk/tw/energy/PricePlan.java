@@ -1,4 +1,4 @@
-package uk.tw.energy.domain;
+package uk.tw.energy;
 
 import java.math.BigDecimal;
 import java.time.DayOfWeek;
@@ -40,7 +40,7 @@ public class PricePlan {
     }
 
 
-    static class PeakTimeMultiplier {
+    public static class PeakTimeMultiplier {
 
         DayOfWeek dayOfWeek;
         BigDecimal multiplier;
