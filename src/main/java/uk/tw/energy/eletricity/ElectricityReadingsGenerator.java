@@ -1,6 +1,4 @@
-package uk.tw.energy.generator;
-
-import uk.tw.energy.domain.ElectricityReading;
+package uk.tw.energy.eletricity;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
