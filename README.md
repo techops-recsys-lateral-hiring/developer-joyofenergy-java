@@ -57,7 +57,7 @@ These values are used in the code and in the following examples too.
 
 ## Requirements
 
-The project requires [Java 1.8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) or
+The project requires [Java 17](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html) or
 higher.
 
 The project makes use of Gradle and uses
