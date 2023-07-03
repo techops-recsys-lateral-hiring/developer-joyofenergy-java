@@ -30,13 +30,13 @@ public class MeterReadingController {
         if (!isMeterReadingsValid(meterReadings)) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-        meterReadingService.storeReadings(meterReadings.getSmartMeterId(), meterReadings.getElectricityReadings());
+        meterReadingService.storeReadings(meterReadings.smartMeterId(), meterReadings.electricityReadings());
         return ResponseEntity.ok().build();
     }
 
     private boolean isMeterReadingsValid(MeterReadings meterReadings) {
-        String smartMeterId = meterReadings.getSmartMeterId();
-        List<ElectricityReading> electricityReadings = meterReadings.getElectricityReadings();
+        String smartMeterId = meterReadings.smartMeterId();
+        List<ElectricityReading> electricityReadings = meterReadings.electricityReadings();
         return smartMeterId != null && !smartMeterId.isEmpty()
                 && electricityReadings != null && !electricityReadings.isEmpty();
     }
