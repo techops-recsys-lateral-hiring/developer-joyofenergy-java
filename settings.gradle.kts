@@ -1,1 +1,1 @@
-rootProject.name = 'developer-joyofenergy-java'
+rootProject.name = "developer-joyofenergy-java"

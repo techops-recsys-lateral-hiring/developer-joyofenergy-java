@@ -1,16 +1,17 @@
 plugins {
-    id "java"
-    id "idea"
-    id "eclipse"
-    id "org.springframework.boot" version "3.1.1"
-    id "io.spring.dependency-management" version "1.0.15.RELEASE"
+    java
+    idea
+    eclipse
+    id("org.springframework.boot") version "3.1.1"
+    id("io.spring.dependency-management") version "1.0.15.RELEASE"
 }
 
 ext["log4j2.version"] = "2.17.1"         // mitigates various vulnerabilities in log4j
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+    }
 }
 
 repositories {
@@ -18,59 +19,57 @@ repositories {
 }
 
 sourceSets {
-    functionalTest {
+    create("functionalTest") {
         java {
-            compileClasspath += main.output + test.output
-            runtimeClasspath += main.output + test.output
-            srcDir file("src/functional-test/java")
+            compileClasspath += sourceSets.main.get().output + sourceSets.test.get().output
+            runtimeClasspath += sourceSets.main.get().output + sourceSets.test.get().output
+            setSrcDirs(listOf("src/functional-test"))
         }
-        resources.srcDir file("src/functional-test/resources")
     }
 }
 
-idea {
-    module {
-        testSourceDirs += project.sourceSets.functionalTest.java.srcDirs
-        testSourceDirs += project.sourceSets.functionalTest.resources.srcDirs
-    }
+val functionalTestImplementation by configurations.getting {
+    extendsFrom(configurations.implementation.get())
 }
+val functionalTestRuntimeOnly by configurations.getting
 
 configurations {
-    functionalTestImplementation.extendsFrom testImplementation
-    functionalTestRuntimeOnly.extendsFrom testRuntimeOnly
+    configurations["functionalTestImplementation"].extendsFrom(configurations.testImplementation.get())
+    configurations["functionalTestRuntimeOnly"].extendsFrom(configurations.testRuntimeOnly.get())
 }
 
-task functionalTest(type: Test) {
+
+val functionalTest = task<Test>("functionalTest") {
+    description = "Runs functional tests."
     group = "verification"
-    description = "Runs the functional tests."
-    testClassesDirs = sourceSets.functionalTest.output.classesDirs
-    classpath = sourceSets.functionalTest.runtimeClasspath
-    outputs.upToDateWhen { false }
-    mustRunAfter test
+
+    testClassesDirs = sourceSets["functionalTest"].output.classesDirs
+    classpath = sourceSets["functionalTest"].runtimeClasspath
+    shouldRunAfter("test")
 
     useJUnitPlatform()
 
     testLogging {
-        events = ["FAILED", "PASSED", "SKIPPED", "STANDARD_OUT"]
+        // ["FAILED", "PASSED", "SKIPPED", "STANDARD_OUT"]
+        events("passed")
     }
 }
+
 
 dependencies {
     /* Spring Boot */
-    implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation ("org.springframework.boot:spring-boot-starter-web")
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
-        exclude group: "org.junit.vintage", module: "junit-vintage-engine"
+        exclude (group = "org.junit.vintage", module = "junit-vintage-engine")
     }
 }
 
-test {
+tasks.named<Test>("test") {
     useJUnitPlatform()
 
     testLogging {
-        events = ["FAILED", "PASSED", "SKIPPED", "STANDARD_OUT"]
+        events ("failed", "passed", "skipped", "standard_out")
     }
 }
 
-check {
-    dependsOn functionalTest
-}
+tasks.check { dependsOn(functionalTest) }
