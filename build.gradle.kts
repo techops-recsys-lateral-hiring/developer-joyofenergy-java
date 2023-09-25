@@ -1,12 +1,12 @@
 plugins {
-    id 'java'
-    id 'idea'
-    id 'eclipse'
-    id 'org.springframework.boot' version '3.1.1'
-    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+    id "java"
+    id "idea"
+    id "eclipse"
+    id "org.springframework.boot" version "3.1.1"
+    id "io.spring.dependency-management" version "1.0.15.RELEASE"
 }
 
-ext['log4j2.version'] = "2.17.1"         // mitigates various vulnerabilities in log4j
+ext["log4j2.version"] = "2.17.1"         // mitigates various vulnerabilities in log4j
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -22,9 +22,9 @@ sourceSets {
         java {
             compileClasspath += main.output + test.output
             runtimeClasspath += main.output + test.output
-            srcDir file('src/functional-test/java')
+            srcDir file("src/functional-test/java")
         }
-        resources.srcDir file('src/functional-test/resources')
+        resources.srcDir file("src/functional-test/resources")
     }
 }
 
@@ -41,8 +41,8 @@ configurations {
 }
 
 task functionalTest(type: Test) {
-    group = 'verification'
-    description = 'Runs the functional tests.'
+    group = "verification"
+    description = "Runs the functional tests."
     testClassesDirs = sourceSets.functionalTest.output.classesDirs
     classpath = sourceSets.functionalTest.runtimeClasspath
     outputs.upToDateWhen { false }
@@ -51,15 +51,15 @@ task functionalTest(type: Test) {
     useJUnitPlatform()
 
     testLogging {
-        events = ['FAILED', 'PASSED', 'SKIPPED', 'STANDARD_OUT']
+        events = ["FAILED", "PASSED", "SKIPPED", "STANDARD_OUT"]
     }
 }
 
 dependencies {
     /* Spring Boot */
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    testImplementation('org.springframework.boot:spring-boot-starter-test') {
-        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    implementation "org.springframework.boot:spring-boot-starter-web"
+    testImplementation("org.springframework.boot:spring-boot-starter-test") {
+        exclude group: "org.junit.vintage", module: "junit-vintage-engine"
     }
 }
 
@@ -67,7 +67,7 @@ test {
     useJUnitPlatform()
 
     testLogging {
-        events = ['FAILED', 'PASSED', 'SKIPPED', 'STANDARD_OUT']
+        events = ["FAILED", "PASSED", "SKIPPED", "STANDARD_OUT"]
     }
 }
 
