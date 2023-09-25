@@ -28,10 +28,10 @@ sourceSets {
     }
 }
 
-val functionalTestImplementation by configurations.getting {
+val functionalTestImplementation: Configuration by configurations.getting {
     extendsFrom(configurations.implementation.get())
 }
-val functionalTestRuntimeOnly by configurations.getting
+val functionalTestRuntimeOnly: Configuration by configurations.getting
 
 configurations {
     configurations["functionalTestImplementation"].extendsFrom(configurations.testImplementation.get())
