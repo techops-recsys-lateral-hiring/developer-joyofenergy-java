@@ -6,8 +6,6 @@ plugins {
     id("io.spring.dependency-management") version "1.0.15.RELEASE"
 }
 
-ext["log4j2.version"] = "2.17.1"         // mitigates various vulnerabilities in log4j
-
 java {
     toolchain {
         languageVersion.set(JavaLanguageVersion.of(17))
@@ -50,8 +48,7 @@ val functionalTest = task<Test>("functionalTest") {
     useJUnitPlatform()
 
     testLogging {
-        // ["FAILED", "PASSED", "SKIPPED", "STANDARD_OUT"]
-        events("passed")
+        events ("failed", "passed", "skipped", "standard_out")
     }
 }
 
