@@ -24,7 +24,7 @@ public class ElectricityReadingsGenerator {
             readings.add(electricityReading);
         }
 
-        readings.sort(Comparator.comparing(ElectricityReading::getTime));
+        readings.sort(Comparator.comparing(ElectricityReading::time));
         return readings;
     }
 }
