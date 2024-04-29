@@ -38,3 +38,5 @@ jobs:
         run: ./gradlew spotlessCheck
       - name: Run Build
         run: ./gradlew build
+      - name: Run Acceptance Test
+        run: ./scripts/acceptance.sh --skip-build
