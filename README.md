@@ -57,7 +57,7 @@ These values are used in the code and in the following examples too.
 
 ## Requirements
 
-The project requires [Java 17](https://adoptium.net/en-GB/) or
+The project requires [Java 21](https://adoptium.net/en-GB/) or
 higher.
 
 The project makes use of Gradle and uses
