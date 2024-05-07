@@ -136,6 +136,7 @@ gradle-app.setting
 .gradletasknamecache
 
 .vscode/
+output_java_files.md
 
 # # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
 # gradle/wrapper/gradle-wrapper.properties
