@@ -6,9 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -39,8 +38,8 @@ public class SeedingApplicationDataConfiguration {
   }
 
   @Bean
-  public Map<String, List<ElectricityReading>> perMeterElectricityReadings() {
-    final Map<String, List<ElectricityReading>> readings = new HashMap<>();
+  public ConcurrentHashMap<String, List<ElectricityReading>> perMeterElectricityReadings() {
+    final ConcurrentHashMap<String, List<ElectricityReading>> readings = new ConcurrentHashMap<>();
     final ElectricityReadingsGenerator electricityReadingsGenerator =
         new ElectricityReadingsGenerator();
     smartMeterToPricePlanAccounts()
@@ -51,8 +50,9 @@ public class SeedingApplicationDataConfiguration {
   }
 
   @Bean
-  public Map<String, String> smartMeterToPricePlanAccounts() {
-    final Map<String, String> smartMeterToPricePlanAccounts = new HashMap<>();
+  public ConcurrentHashMap<String, String> smartMeterToPricePlanAccounts() {
+    final ConcurrentHashMap<String, String> smartMeterToPricePlanAccounts =
+        new ConcurrentHashMap<>();
     smartMeterToPricePlanAccounts.put("smart-meter-0", MOST_EVIL_PRICE_PLAN_ID);
     smartMeterToPricePlanAccounts.put("smart-meter-1", RENEWABLES_PRICE_PLAN_ID);
     smartMeterToPricePlanAccounts.put("smart-meter-2", MOST_EVIL_PRICE_PLAN_ID);
