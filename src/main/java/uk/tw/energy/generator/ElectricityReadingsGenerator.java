@@ -1,3 +1,8 @@
+/**
+ * Generates a list of {@link ElectricityReading} objects.
+ *
+ * <p>Used to generate test data for the application.
+ */
 package uk.tw.energy.generator;
 
 import java.math.BigDecimal;
@@ -9,8 +14,22 @@ import java.util.List;
 import java.util.Random;
 import uk.tw.energy.domain.ElectricityReading;
 
+/**
+ * Generates a list of {@link ElectricityReading} objects.
+ *
+ * <p>Used to generate test data for the application.
+ */
 public class ElectricityReadingsGenerator {
 
+  /** Constructs a new ElectricityReadingsGenerator. */
+  public ElectricityReadingsGenerator() {}
+
+  /**
+   * Generates a list of ElectricityReading objects.
+   *
+   * @param number the number of ElectricityReading objects to generate
+   * @return a list of ElectricityReading objects, sorted by time in ascending order
+   */
   public List<ElectricityReading> generate(int number) {
     List<ElectricityReading> readings = new ArrayList<>();
     Instant now = Instant.now();
