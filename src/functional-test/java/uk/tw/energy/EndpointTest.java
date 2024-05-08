@@ -1,3 +1,9 @@
+/**
+ * Integration test class for the endpoints in the application.
+ *
+ * <p>This class uses the {@link SpringBootTest} annotation to start the application with a random
+ * port, and the {@link TestRestTemplate} to make HTTP requests to the running application.
+ */
 package uk.tw.energy;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -27,17 +33,36 @@ import uk.tw.energy.builders.MeterReadingsBuilder;
 import uk.tw.energy.domain.ElectricityReading;
 import uk.tw.energy.domain.MeterReadings;
 
+/**
+ * Integration test class for the endpoints in the application.
+ *
+ * <p>This class uses the {@link SpringBootTest} annotation to start the application with a random
+ * port, and the {@link TestRestTemplate} to make HTTP requests to the running application.
+ */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = App.class)
 public class EndpointTest {
 
+  /** The TestRestTemplate to be used for making requests to the running application. */
   @Autowired private TestRestTemplate restTemplate;
 
+  /**
+   * Converts a MeterReadings object into an HttpEntity with JSON content type.
+   *
+   * @param meterReadings the MeterReadings object to be converted
+   * @return the HttpEntity containing the meterReadings object with JSON content type
+   */
   private static HttpEntity<MeterReadings> toHttpEntity(MeterReadings meterReadings) {
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
     return new HttpEntity<>(meterReadings, headers);
   }
 
+  /**
+   * Tests the '/readings/store' endpoint by sending a POST request with generated electricity
+   * readings and asserting the response status code.
+   *
+   * @return void
+   */
   @Test
   public void shouldStoreReadings() {
     MeterReadings meterReadings = new MeterReadingsBuilder().generateElectricityReadings().build();
@@ -49,6 +74,12 @@ public class EndpointTest {
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
   }
 
+  /**
+   * Tests the '/readings/read/{smartMeterId}' endpoint by sending a GET request with a valid smart
+   * meter ID and asserting the response status code and body.
+   *
+   * @return void
+   */
   @SuppressWarnings("DataFlowIssue")
   @Test
   public void givenMeterIdShouldReturnAMeterReadingAssociatedWithMeterId() {
@@ -67,6 +98,12 @@ public class EndpointTest {
     assertThat(Arrays.asList(response.getBody())).isEqualTo(data);
   }
 
+  /**
+   * Tests the '/price-plans/compare-all/{smartMeterId}' endpoint by sending a GET request with a
+   * valid smart meter ID and asserting the response status code and body.
+   *
+   * @return void
+   */
   @Test
   public void shouldCalculateAllPrices() {
     String smartMeterId = "bob";
@@ -88,6 +125,13 @@ public class EndpointTest {
                 Map.of("price-plan-0", 36000, "price-plan-1", 7200, "price-plan-2", 3600), null));
   }
 
+  /**
+   * Tests the '/price-plans/recommend/{smartMeterId}' endpoint by sending a GET request with a
+   * valid smart meter ID and asserting the response body.
+   *
+   * @param smartMeterId the ID of the smart meter
+   * @return void
+   */
   @SuppressWarnings("rawtypes")
   @Test
   public void givenMeterIdAndLimitShouldReturnRecommendedCheapestPricePlans() {
@@ -107,6 +151,12 @@ public class EndpointTest {
         .containsExactly(Map.of("price-plan-2", 3600), Map.of("price-plan-1", 7200));
   }
 
+  /**
+   * Populates readings for a specific smart meter with the given data.
+   *
+   * @param smartMeterId the ID of the smart meter
+   * @param data the list of electricity readings to populate
+   */
   private void populateReadingsForMeter(String smartMeterId, List<ElectricityReading> data) {
     MeterReadings readings = new MeterReadings(smartMeterId, data);
 
@@ -114,6 +164,13 @@ public class EndpointTest {
     restTemplate.postForEntity("/readings/store", entity, String.class);
   }
 
+  /**
+   * Tests the '/readings/read/{invalidMeterId}' endpoint by sending a GET request with an invalid
+   * meter ID and asserting the response status code.
+   *
+   * @param none
+   * @return void
+   */
   @Test
   public void givenInvalidMeterIdShouldReturnNotFound() {
     String invalidMeterId = "nonexistent";
@@ -122,6 +179,13 @@ public class EndpointTest {
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
   }
 
+  /**
+   * Tests the '/readings/store' endpoint by sending a POST request with null meter readings and
+   * asserting the response status code.
+   *
+   * @param none
+   * @return void
+   */
   @Test
   public void givenInvalidMeterReadingsShouldReturnBadRequest() {
     MeterReadings invalidReadings = null;
@@ -132,6 +196,12 @@ public class EndpointTest {
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
   }
 
+  /**
+   * Tests the concurrent handling of meter reading updates.
+   *
+   * @param none
+   * @return void
+   */
   @Test
   public void shouldHandleConcurrentMeterReadingUpdates() {
     final String meterId = "concurrent-meter";

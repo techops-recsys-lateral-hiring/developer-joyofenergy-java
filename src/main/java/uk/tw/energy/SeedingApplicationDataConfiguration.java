@@ -16,6 +16,7 @@ import uk.tw.energy.domain.ElectricityReading;
 import uk.tw.energy.domain.PricePlan;
 import uk.tw.energy.generator.ElectricityReadingsGenerator;
 
+/** Main class for the Energy application. */
 @Configuration
 public class SeedingApplicationDataConfiguration {
 
@@ -23,6 +24,19 @@ public class SeedingApplicationDataConfiguration {
   private static final String RENEWABLES_PRICE_PLAN_ID = "price-plan-1";
   private static final String STANDARD_PRICE_PLAN_ID = "price-plan-2";
 
+  /**
+   * The constructor for the {@link SeedingApplicationDataConfiguration}.
+   *
+   * <p>It does nothing, but it's constructor makes it a candidate for dependency injection by the
+   * Spring framework.
+   */
+  public SeedingApplicationDataConfiguration() {}
+
+  /**
+   * Creates and returns a list of PricePlan objects.
+   *
+   * @return a list of PricePlan objects
+   */
   @Bean
   public List<PricePlan> pricePlans() {
     final List<PricePlan> pricePlans = new ArrayList<>();
@@ -37,6 +51,13 @@ public class SeedingApplicationDataConfiguration {
     return pricePlans;
   }
 
+  /**
+   * Creates and returns a ConcurrentHashMap that maps smart meter IDs to their corresponding
+   * electricity readings.
+   *
+   * @return a ConcurrentHashMap containing the mappings between smart meter IDs and electricity
+   *     readings.
+   */
   @Bean
   public ConcurrentHashMap<String, List<ElectricityReading>> perMeterElectricityReadings() {
     final ConcurrentHashMap<String, List<ElectricityReading>> readings = new ConcurrentHashMap<>();
@@ -49,6 +70,12 @@ public class SeedingApplicationDataConfiguration {
     return readings;
   }
 
+  /**
+   * Creates and returns a ConcurrentHashMap that maps smart meter IDs to their corresponding price
+   * plan IDs.
+   *
+   * @return a ConcurrentHashMap containing the mappings between smart meter IDs and price plan IDs.
+   */
   @Bean
   public ConcurrentHashMap<String, String> smartMeterToPricePlanAccounts() {
     final ConcurrentHashMap<String, String> smartMeterToPricePlanAccounts =
@@ -61,6 +88,12 @@ public class SeedingApplicationDataConfiguration {
     return smartMeterToPricePlanAccounts;
   }
 
+  /**
+   * A description of the entire Java function.
+   *
+   * @param builder description of parameter
+   * @return description of return value
+   */
   @Bean
   @Primary
   public ObjectMapper objectMapper(Jackson2ObjectMapperBuilder builder) {
