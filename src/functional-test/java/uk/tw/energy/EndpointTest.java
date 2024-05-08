@@ -43,7 +43,7 @@ import uk.tw.energy.domain.MeterReadings;
 public class EndpointTest {
 
   @Autowired private TestRestTemplate restTemplate;
-  
+
   /** Default constructor required by JUnit. */
   public EndpointTest() {}
 

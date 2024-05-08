@@ -7,7 +7,7 @@
 package uk.tw.energy.domain;
 
 import static java.util.Collections.singletonList;
-import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import java.math.BigDecimal;
 import java.time.DayOfWeek;
@@ -58,10 +58,16 @@ public class PricePlanTest {
   @Test
   public void shouldReturnTheBasePriceGivenAnOrdinaryDateTime() throws Exception {
     LocalDateTime normalDateTime = LocalDateTime.of(2017, Month.AUGUST, 31, 12, 0, 0);
-    PricePlan.PeakTimeMultiplier peakTimeMultiplier =
-        new PricePlan.PeakTimeMultiplier(DayOfWeek.WEDNESDAY, BigDecimal.TEN);
+    PeakTimeMultiplier peakTimeMultiplier =
+        new PeakTimeMultiplier(
+            PeriodType.PEAK,
+            DayOfWeek.WEDNESDAY,
+            BigDecimal.TEN,
+            LocalDateTime.of(2024, Month.JANUARY, 1, 20, 0, 0),
+            LocalDateTime.of(2024, Month.DECEMBER, 31, 21, 0, 0));
     PricePlan pricePlan =
-        new PricePlan(null, null, BigDecimal.ONE, singletonList(peakTimeMultiplier));
+        new PricePlan(
+            "Plan1", ENERGY_SUPPLIER_NAME, BigDecimal.ONE, Arrays.asList(peakTimeMultiplier));
 
     BigDecimal price = pricePlan.getPrice(normalDateTime);
 
@@ -77,8 +83,13 @@ public class PricePlanTest {
   @Test
   public void shouldReturnAnExceptionPriceGivenExceptionalDateTime() throws Exception {
     LocalDateTime exceptionalDateTime = LocalDateTime.of(2017, Month.AUGUST, 30, 23, 0, 0);
-    PricePlan.PeakTimeMultiplier peakTimeMultiplier =
-        new PricePlan.PeakTimeMultiplier(DayOfWeek.WEDNESDAY, BigDecimal.TEN);
+    PeakTimeMultiplier peakTimeMultiplier =
+        new PeakTimeMultiplier(
+            PeriodType.PEAK,
+            DayOfWeek.WEDNESDAY,
+            BigDecimal.TEN,
+            LocalDateTime.of(2017, Month.JANUARY, 1, 00, 0, 0),
+            LocalDateTime.of(2017, Month.DECEMBER, 31, 21, 0, 0));
     PricePlan pricePlan =
         new PricePlan(null, null, BigDecimal.ONE, singletonList(peakTimeMultiplier));
 
@@ -95,11 +106,21 @@ public class PricePlanTest {
   @Test
   public void shouldReceiveMultipleExceptionalDateTimes() throws Exception {
     LocalDateTime exceptionalDateTime = LocalDateTime.of(2017, Month.AUGUST, 30, 23, 0, 0);
-    PricePlan.PeakTimeMultiplier peakTimeMultiplier =
-        new PricePlan.PeakTimeMultiplier(DayOfWeek.WEDNESDAY, BigDecimal.TEN);
-    PricePlan.PeakTimeMultiplier otherPeakTimeMultiplier =
-        new PricePlan.PeakTimeMultiplier(DayOfWeek.TUESDAY, BigDecimal.TEN);
-    List<PricePlan.PeakTimeMultiplier> peakTimeMultipliers =
+    PeakTimeMultiplier peakTimeMultiplier =
+        new PeakTimeMultiplier(
+            PeriodType.PEAK,
+            DayOfWeek.WEDNESDAY,
+            BigDecimal.TEN,
+            LocalDateTime.of(2017, Month.JANUARY, 1, 0, 0, 0),
+            LocalDateTime.of(2017, Month.DECEMBER, 31, 21, 0, 0));
+    PeakTimeMultiplier otherPeakTimeMultiplier =
+        new PeakTimeMultiplier(
+            PeriodType.PEAK,
+            DayOfWeek.TUESDAY,
+            BigDecimal.TEN,
+            LocalDateTime.of(2024, Month.JANUARY, 1, 20, 0, 0),
+            LocalDateTime.of(2024, Month.DECEMBER, 31, 21, 0, 0));
+    List<PeakTimeMultiplier> peakTimeMultipliers =
         Arrays.asList(peakTimeMultiplier, otherPeakTimeMultiplier);
     PricePlan pricePlan = new PricePlan(null, null, BigDecimal.ONE, peakTimeMultipliers);
 

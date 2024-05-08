@@ -9,6 +9,7 @@ package uk.tw.energy.service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import uk.tw.energy.domain.ElectricityReading;
+import uk.tw.energy.domain.PeakTimeMultiplier;
 import uk.tw.energy.domain.PricePlan;
 
 /**
@@ -56,11 +58,14 @@ public class PricePlanService {
       return Optional.empty();
     }
 
+    LocalDateTime calculationTime = LocalDateTime.now();
     return Optional.of(
         pricePlans.stream()
             .collect(
                 Collectors.toMap(
-                    PricePlan::getPlanName, t -> calculateCost(electricityReadings.get(), t))));
+                    PricePlan::getPlanName,
+                    pricePlan ->
+                        calculateCost(electricityReadings.get(), pricePlan, calculationTime))));
   }
 
   /**
@@ -72,12 +77,19 @@ public class PricePlanService {
    * @return the calculated cost of electricity readings
    */
   private BigDecimal calculateCost(
-      List<ElectricityReading> electricityReadings, PricePlan pricePlan) {
+      List<ElectricityReading> electricityReadings,
+      PricePlan pricePlan,
+      LocalDateTime calculationTime) {
     BigDecimal average = calculateAverageReading(electricityReadings);
     BigDecimal timeElapsed = calculateTimeElapsed(electricityReadings);
 
+    if (timeElapsed.compareTo(BigDecimal.ZERO) == 0) {
+      return BigDecimal.ZERO;
+    }
+
     BigDecimal averagedCost = average.divide(timeElapsed, RoundingMode.HALF_UP);
-    return averagedCost.multiply(pricePlan.getUnitRate());
+    BigDecimal unitCost = pricePlan.getPrice(calculationTime);
+    return averagedCost.multiply(unitCost);
   }
 
   /**
@@ -90,7 +102,7 @@ public class PricePlanService {
     BigDecimal summedReadings =
         electricityReadings.stream()
             .map(ElectricityReading::reading)
-            .reduce(BigDecimal.ZERO, (reading, accumulator) -> reading.add(accumulator));
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
 
     return summedReadings.divide(
         BigDecimal.valueOf(electricityReadings.size()), RoundingMode.HALF_UP);
@@ -104,11 +116,50 @@ public class PricePlanService {
    */
   private BigDecimal calculateTimeElapsed(List<ElectricityReading> electricityReadings) {
     ElectricityReading first =
-        electricityReadings.stream().min(Comparator.comparing(ElectricityReading::time)).get();
+        electricityReadings.stream()
+            .min(Comparator.comparing(ElectricityReading::time))
+            .orElseThrow(() -> new IllegalArgumentException("No readings available"));
 
     ElectricityReading last =
-        electricityReadings.stream().max(Comparator.comparing(ElectricityReading::time)).get();
+        electricityReadings.stream()
+            .max(Comparator.comparing(ElectricityReading::time))
+            .orElseThrow(() -> new IllegalArgumentException("No readings available"));
 
-    return BigDecimal.valueOf(Duration.between(first.time(), last.time()).getSeconds() / 3600.0);
+    return BigDecimal.valueOf(Duration.between(first.time(), last.time()).toSeconds() / 3600.0);
+  }
+
+  /**
+   * Retrieves the price plan with the specified plan name.
+   *
+   * @param planName the name of the plan to retrieve
+   * @return an Optional containing the price plan with the specified name, or an empty Optional if
+   *     no such plan exists
+   */
+  public Optional<PricePlan> getPricePlanByName(String planName) {
+    return pricePlans.stream().filter(plan -> plan.getPlanName().equals(planName)).findFirst();
+  }
+
+  /**
+   * Retrieves all price plans.
+   *
+   * @return a list of PricePlan objects representing all price plans
+   */
+  public List<PricePlan> getAllPricePlans() {
+    return pricePlans;
+  }
+
+  /**
+   * Adds a peak time multiplier to the specified price plan if the plan exists.
+   *
+   * @param planName the name of the plan to add the multiplier to
+   * @param multiplier the peak time multiplier to add
+   */
+  public void addPeakTimeMultiplierToPlan(String planName, PeakTimeMultiplier multiplier) {
+    Optional<PricePlan> optionalPricePlan = getPricePlanByName(planName);
+    optionalPricePlan.ifPresent(
+        pricePlan -> {
+          pricePlan.setPeakTimeMultiplier(multiplier);
+          pricePlans.replaceAll(p -> p.getPlanName().equals(planName) ? pricePlan : p);
+        });
   }
 }
