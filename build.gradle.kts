@@ -1,4 +1,5 @@
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
+import org.gradle.api.tasks.javadoc.Javadoc
 
 plugins {
     java
@@ -69,6 +70,8 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude (group = "org.junit.vintage", module = "junit-vintage-engine")
     }
+    implementation("org.apiguardian:apiguardian-api:1.1.0")
+
 }
 
 tasks.named<Test>("test") {
@@ -93,6 +96,25 @@ tasks.withType<DependencyUpdatesTask> {
         isNonStable(candidate.version)
     }
     gradleReleaseChannel="current"
+}
+
+
+val unitTestJavadoc = tasks.register<Javadoc>("unitTestJavadoc") {
+    description = "Generates Javadoc for unit tests."
+    source = sourceSets["test"].allJava
+    classpath = sourceSets["test"].runtimeClasspath
+    destinationDir = file("$buildDir/docs/unitTest")
+}
+
+val functionalTestJavadoc = tasks.register<Javadoc>("functionalTestJavadoc") {
+    description = "Generates Javadoc for functional tests."
+    source = sourceSets["functionalTest"].allJava
+    classpath = sourceSets["functionalTest"].runtimeClasspath
+    destinationDir = file("$buildDir/docs/functionalTest")
+}
+
+tasks.named("javadoc") {
+    dependsOn(unitTestJavadoc, functionalTestJavadoc)
 }
 
 spotless {

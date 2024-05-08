@@ -42,8 +42,10 @@ import uk.tw.energy.domain.MeterReadings;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = App.class)
 public class EndpointTest {
 
-  /** The TestRestTemplate to be used for making requests to the running application. */
   @Autowired private TestRestTemplate restTemplate;
+  
+  /** Default constructor required by JUnit. */
+  public EndpointTest() {}
 
   /**
    * Converts a MeterReadings object into an HttpEntity with JSON content type.
@@ -60,8 +62,6 @@ public class EndpointTest {
   /**
    * Tests the '/readings/store' endpoint by sending a POST request with generated electricity
    * readings and asserting the response status code.
-   *
-   * @return void
    */
   @Test
   public void shouldStoreReadings() {
@@ -77,8 +77,6 @@ public class EndpointTest {
   /**
    * Tests the '/readings/read/{smartMeterId}' endpoint by sending a GET request with a valid smart
    * meter ID and asserting the response status code and body.
-   *
-   * @return void
    */
   @SuppressWarnings("DataFlowIssue")
   @Test
@@ -101,8 +99,6 @@ public class EndpointTest {
   /**
    * Tests the '/price-plans/compare-all/{smartMeterId}' endpoint by sending a GET request with a
    * valid smart meter ID and asserting the response status code and body.
-   *
-   * @return void
    */
   @Test
   public void shouldCalculateAllPrices() {
@@ -128,9 +124,6 @@ public class EndpointTest {
   /**
    * Tests the '/price-plans/recommend/{smartMeterId}' endpoint by sending a GET request with a
    * valid smart meter ID and asserting the response body.
-   *
-   * @param smartMeterId the ID of the smart meter
-   * @return void
    */
   @SuppressWarnings("rawtypes")
   @Test
@@ -167,9 +160,6 @@ public class EndpointTest {
   /**
    * Tests the '/readings/read/{invalidMeterId}' endpoint by sending a GET request with an invalid
    * meter ID and asserting the response status code.
-   *
-   * @param none
-   * @return void
    */
   @Test
   public void givenInvalidMeterIdShouldReturnNotFound() {
@@ -182,9 +172,6 @@ public class EndpointTest {
   /**
    * Tests the '/readings/store' endpoint by sending a POST request with null meter readings and
    * asserting the response status code.
-   *
-   * @param none
-   * @return void
    */
   @Test
   public void givenInvalidMeterReadingsShouldReturnBadRequest() {
@@ -196,12 +183,7 @@ public class EndpointTest {
     assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
   }
 
-  /**
-   * Tests the concurrent handling of meter reading updates.
-   *
-   * @param none
-   * @return void
-   */
+  /** Tests the concurrent handling of meter reading updates. */
   @Test
   public void shouldHandleConcurrentMeterReadingUpdates() {
     final String meterId = "concurrent-meter";
