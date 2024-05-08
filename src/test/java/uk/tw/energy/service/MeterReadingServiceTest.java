@@ -3,8 +3,8 @@ package uk.tw.energy.service;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +14,7 @@ public class MeterReadingServiceTest {
 
   @BeforeEach
   public void setUp() {
-    meterReadingService = new MeterReadingService(new HashMap<>());
+    meterReadingService = new MeterReadingService(new ConcurrentHashMap<>());
   }
 
   @Test

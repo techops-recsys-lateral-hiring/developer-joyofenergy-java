@@ -4,8 +4,8 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -22,7 +22,7 @@ public class MeterReadingControllerTest {
 
   @BeforeEach
   public void setUp() {
-    this.meterReadingService = new MeterReadingService(new HashMap<>());
+    this.meterReadingService = new MeterReadingService(new ConcurrentHashMap<>());
     this.meterReadingController = new MeterReadingController(meterReadingService);
   }
 

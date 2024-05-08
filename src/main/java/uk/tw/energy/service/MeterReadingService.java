@@ -1,18 +1,20 @@
 package uk.tw.energy.service;
 
-import java.util.ArrayList;
+// import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import org.springframework.stereotype.Service;
 import uk.tw.energy.domain.ElectricityReading;
 
 @Service
 public class MeterReadingService {
 
-  private final Map<String, List<ElectricityReading>> meterAssociatedReadings;
+  private final ConcurrentHashMap<String, List<ElectricityReading>> meterAssociatedReadings;
 
-  public MeterReadingService(Map<String, List<ElectricityReading>> meterAssociatedReadings) {
+  public MeterReadingService(
+      ConcurrentHashMap<String, List<ElectricityReading>> meterAssociatedReadings) {
     this.meterAssociatedReadings = meterAssociatedReadings;
   }
 
@@ -21,9 +23,15 @@ public class MeterReadingService {
   }
 
   public void storeReadings(String smartMeterId, List<ElectricityReading> electricityReadings) {
-    if (!meterAssociatedReadings.containsKey(smartMeterId)) {
-      meterAssociatedReadings.put(smartMeterId, new ArrayList<>());
-    }
-    meterAssociatedReadings.get(smartMeterId).addAll(electricityReadings);
+    meterAssociatedReadings.compute(
+        smartMeterId,
+        (key, existingList) -> {
+          if (existingList == null) {
+            return new CopyOnWriteArrayList<>(electricityReadings);
+          } else {
+            existingList.addAll(electricityReadings);
+            return existingList;
+          }
+        });
   }
 }

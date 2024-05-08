@@ -7,12 +7,19 @@ import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.IntStream;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -105,6 +112,65 @@ public class EndpointTest {
 
     HttpEntity<MeterReadings> entity = toHttpEntity(readings);
     restTemplate.postForEntity("/readings/store", entity, String.class);
+  }
+
+  @Test
+  public void givenInvalidMeterIdShouldReturnNotFound() {
+    String invalidMeterId = "nonexistent";
+    ResponseEntity<String> response =
+        restTemplate.getForEntity("/readings/read/" + invalidMeterId, String.class);
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+  }
+
+  @Test
+  public void givenInvalidMeterReadingsShouldReturnBadRequest() {
+    MeterReadings invalidReadings = null;
+    HttpEntity<MeterReadings> entity = toHttpEntity(invalidReadings);
+
+    ResponseEntity<String> response =
+        restTemplate.postForEntity("/readings/store", entity, String.class);
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+  }
+
+  @Test
+  public void shouldHandleConcurrentMeterReadingUpdates() {
+    final String meterId = "concurrent-meter";
+    final int numberOfThreads = 5000;
+    ExecutorService executor = Executors.newFixedThreadPool(50);
+    CountDownLatch latch = new CountDownLatch(numberOfThreads);
+
+    Runnable postingTask =
+        () -> {
+          try {
+            MeterReadings readings =
+                new MeterReadings(
+                    meterId, List.of(new ElectricityReading(Instant.now(), BigDecimal.TEN)));
+            HttpEntity<MeterReadings> entity = toHttpEntity(readings);
+            restTemplate.postForEntity("/readings/store", entity, String.class);
+          } finally {
+            latch.countDown(); // Garante que o latch é decrementado mesmo em caso de falha
+          }
+        };
+
+    IntStream.range(0, numberOfThreads).forEach(i -> executor.submit(postingTask));
+    executor.shutdown();
+    try {
+      if (!executor.awaitTermination(1, TimeUnit.HOURS)) {
+        executor.shutdownNow();
+      }
+      latch.await();
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+    }
+    ResponseEntity<List<ElectricityReading>> response =
+        restTemplate.exchange(
+            "/readings/read/" + meterId,
+            HttpMethod.GET,
+            null,
+            new ParameterizedTypeReference<List<ElectricityReading>>() {});
+
+    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+    assertThat(response.getBody()).hasSize(numberOfThreads);
   }
 
   record CompareAllResponse(Map<String, Integer> pricePlanComparisons, String pricePlanId) {}
