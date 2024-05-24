@@ -1,15 +1,5 @@
 package uk.tw.energy.controller;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-
-import java.math.BigDecimal;
-import java.time.Instant;
-import java.util.AbstractMap;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -19,6 +9,15 @@ import uk.tw.energy.domain.PricePlan;
 import uk.tw.energy.service.AccountService;
 import uk.tw.energy.service.MeterReadingService;
 import uk.tw.energy.service.PricePlanService;
+
+import java.math.BigDecimal;
+import java.time.Instant;
+import java.util.AbstractMap;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class PricePlanComparatorControllerTest {
     private static final String WORST_PLAN_ID = "worst-supplier";
@@ -53,13 +52,12 @@ public class PricePlanComparatorControllerTest {
         ResponseEntity<Map<String, Object>> response = controller.calculatedCostForEachPricePlan(SMART_METER_ID);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        Map<String, BigDecimal> expectedPricePlanToCost = Map.of(
-            WORST_PLAN_ID, BigDecimal.valueOf(100.0),
-            BEST_PLAN_ID, BigDecimal.valueOf(10.0),
-            SECOND_BEST_PLAN_ID, BigDecimal.valueOf(20.0));
         Map<String, Object> expected = Map.of(
             PricePlanComparatorController.PRICE_PLAN_ID_KEY, WORST_PLAN_ID,
-            PricePlanComparatorController.PRICE_PLAN_COMPARISONS_KEY, expectedPricePlanToCost);
+            PricePlanComparatorController.PRICE_PLAN_COMPARISONS_KEY, Map.of(
+                WORST_PLAN_ID, BigDecimal.valueOf(100.0),
+                BEST_PLAN_ID, BigDecimal.valueOf(10.0),
+                SECOND_BEST_PLAN_ID, BigDecimal.valueOf(20.0)));
         assertThat(response.getBody()).isEqualTo(expected);
     }
 
