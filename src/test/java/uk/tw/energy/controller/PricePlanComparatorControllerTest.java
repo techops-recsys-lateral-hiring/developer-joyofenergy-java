@@ -53,13 +53,13 @@ public class PricePlanComparatorControllerTest {
         ResponseEntity<Map<String, Object>> response = controller.calculatedCostForEachPricePlan(SMART_METER_ID);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        Map<String, BigDecimal> expectedPricePlanToCost = new HashMap<>();
-        expectedPricePlanToCost.put(WORST_PLAN_ID, BigDecimal.valueOf(100.0));
-        expectedPricePlanToCost.put(BEST_PLAN_ID, BigDecimal.valueOf(10.0));
-        expectedPricePlanToCost.put(SECOND_BEST_PLAN_ID, BigDecimal.valueOf(20.0));
-        Map<String, Object> expected = new HashMap<>();
-        expected.put(PricePlanComparatorController.PRICE_PLAN_ID_KEY, WORST_PLAN_ID);
-        expected.put(PricePlanComparatorController.PRICE_PLAN_COMPARISONS_KEY, expectedPricePlanToCost);
+        Map<String, BigDecimal> expectedPricePlanToCost = Map.of(
+            WORST_PLAN_ID, BigDecimal.valueOf(100.0),
+            BEST_PLAN_ID, BigDecimal.valueOf(10.0),
+            SECOND_BEST_PLAN_ID, BigDecimal.valueOf(20.0));
+        Map<String, Object> expected = Map.of(
+            PricePlanComparatorController.PRICE_PLAN_ID_KEY, WORST_PLAN_ID,
+            PricePlanComparatorController.PRICE_PLAN_COMPARISONS_KEY, expectedPricePlanToCost);
         assertThat(response.getBody()).isEqualTo(expected);
     }
 
@@ -80,10 +80,10 @@ public class PricePlanComparatorControllerTest {
                 controller.recommendCheapestPricePlans(SMART_METER_ID, null);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        List<Map.Entry<String, BigDecimal>> expectedPricePlanToCost = new ArrayList<>();
-        expectedPricePlanToCost.add(new AbstractMap.SimpleEntry<>(BEST_PLAN_ID, BigDecimal.valueOf(38.0)));
-        expectedPricePlanToCost.add(new AbstractMap.SimpleEntry<>(SECOND_BEST_PLAN_ID, BigDecimal.valueOf(76.0)));
-        expectedPricePlanToCost.add(new AbstractMap.SimpleEntry<>(WORST_PLAN_ID, BigDecimal.valueOf(380.0)));
+        var expectedPricePlanToCost = List.of(
+            new AbstractMap.SimpleEntry<>(BEST_PLAN_ID, BigDecimal.valueOf(38.0)),
+            new AbstractMap.SimpleEntry<>(SECOND_BEST_PLAN_ID, BigDecimal.valueOf(76.0)),
+            new AbstractMap.SimpleEntry<>(WORST_PLAN_ID, BigDecimal.valueOf(380.0)));
         assertThat(response.getBody()).isEqualTo(expectedPricePlanToCost);
     }
 
@@ -96,9 +96,9 @@ public class PricePlanComparatorControllerTest {
         ResponseEntity<List<Map.Entry<String, BigDecimal>>> response =
                 controller.recommendCheapestPricePlans(SMART_METER_ID, 2);
 
-        List<Map.Entry<String, BigDecimal>> expectedPricePlanToCost = new ArrayList<>();
-        expectedPricePlanToCost.add(new AbstractMap.SimpleEntry<>(BEST_PLAN_ID, BigDecimal.valueOf(16.7)));
-        expectedPricePlanToCost.add(new AbstractMap.SimpleEntry<>(SECOND_BEST_PLAN_ID, BigDecimal.valueOf(33.4)));
+        var expectedPricePlanToCost = List.of(
+            new AbstractMap.SimpleEntry<>(BEST_PLAN_ID, BigDecimal.valueOf(16.7)),
+            new AbstractMap.SimpleEntry<>(SECOND_BEST_PLAN_ID, BigDecimal.valueOf(33.4)));
         assertThat(response.getBody()).isEqualTo(expectedPricePlanToCost);
     }
 
@@ -111,10 +111,10 @@ public class PricePlanComparatorControllerTest {
         ResponseEntity<List<Map.Entry<String, BigDecimal>>> response =
                 controller.recommendCheapestPricePlans(SMART_METER_ID, 5);
 
-        List<Map.Entry<String, BigDecimal>> expectedPricePlanToCost = new ArrayList<>();
-        expectedPricePlanToCost.add(new AbstractMap.SimpleEntry<>(BEST_PLAN_ID, BigDecimal.valueOf(14.0)));
-        expectedPricePlanToCost.add(new AbstractMap.SimpleEntry<>(SECOND_BEST_PLAN_ID, BigDecimal.valueOf(28.0)));
-        expectedPricePlanToCost.add(new AbstractMap.SimpleEntry<>(WORST_PLAN_ID, BigDecimal.valueOf(140.0)));
+        var expectedPricePlanToCost = List.of(
+            new AbstractMap.SimpleEntry<>(BEST_PLAN_ID, BigDecimal.valueOf(14.0)),
+            new AbstractMap.SimpleEntry<>(SECOND_BEST_PLAN_ID, BigDecimal.valueOf(28.0)),
+            new AbstractMap.SimpleEntry<>(WORST_PLAN_ID, BigDecimal.valueOf(140.0)));
         assertThat(response.getBody()).isEqualTo(expectedPricePlanToCost);
     }
 }
