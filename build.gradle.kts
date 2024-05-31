@@ -97,7 +97,7 @@ tasks.withType<DependencyUpdatesTask> {
 
 spotless {
     java {
-        googleJavaFormat()
+        palantirJavaFormat()
         formatAnnotations()
     }
 }
