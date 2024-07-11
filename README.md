@@ -22,24 +22,6 @@ Unfortunately, two members of the team are on annual leave, and another one has 
 another ThoughtWorker to progress with the current user stories on the story wall. This is your chance to make an impact
 on the business, improve the code base and deliver value.
 
-## Story Wall
-
-At JOI energy the development team use a story wall or Kanban board to keep track of features or "stories" as they are
-worked on.
-
-The wall you will be working from today has 7 columns:
-
-- Backlog
-- Ready for Dev
-- In Dev
-- Ready for Testing
-- In Testing
-- Ready for sign off
-- Done
-
-Examples can be found
-here [https://leankit.com/learn/kanban/kanban-board/](https://leankit.com/learn/kanban/kanban-board/)
-
 ## Users
 
 To trial the new JOI software 5 people from the JOI accounts team have agreed to test the service and share their energy
