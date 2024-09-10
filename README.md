@@ -39,8 +39,7 @@ These values are used in the code and in the following examples too.
 
 ## Requirements
 
-The project requires [Java 21](https://adoptium.net/en-GB/) or
-higher.
+The project requires [Java 21](https://adoptium.net/en-GB/).
 
 The project makes use of Gradle and uses
 the [Gradle wrapper](https://docs.gradle.org/current/userguide/gradle_wrapper.html), which means you don't need Gradle
