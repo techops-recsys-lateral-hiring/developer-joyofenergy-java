@@ -51,6 +51,7 @@ public class PricePlanService {
         return summedReadings.divide(BigDecimal.valueOf(electricityReadings.size()), RoundingMode.HALF_UP);
     }
 
+
     private BigDecimal calculateTimeElapsed(List<ElectricityReading> electricityReadings) {
         ElectricityReading first = electricityReadings.stream()
                 .min(Comparator.comparing(ElectricityReading::time))
