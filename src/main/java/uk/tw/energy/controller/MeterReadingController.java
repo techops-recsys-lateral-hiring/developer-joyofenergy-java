@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import uk.tw.energy.domain.CustomResponse;
 import uk.tw.energy.domain.ElectricityReading;
 import uk.tw.energy.domain.MeterReadings;
 import uk.tw.energy.service.MeterReadingService;
@@ -25,28 +26,29 @@ public class MeterReadingController {
     }
 
     @PostMapping("/store")
-    public ResponseEntity storeReadings(@RequestBody MeterReadings meterReadings) {
-        if (!isMeterReadingsValid(meterReadings)) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    public ResponseEntity<CustomResponse<String>> storeReadings(@RequestBody MeterReadings meterReadings) {
+        if (ValidatorUtil.validateMeterReading((meterReadings))) {
+            CustomResponse<String> response = CustomResponse.<String>builder()
+                    .error("smartMeterId|electricityReadings is null or empty")
+                    .httpStatus(HttpStatus.BAD_REQUEST)
+                    .build();
+            return ResponseEntity.badRequest().body(response);
         }
         meterReadingService.storeReadings(meterReadings.smartMeterId(), meterReadings.electricityReadings());
-        return ResponseEntity.ok().build();
-    }
-
-    private boolean isMeterReadingsValid(MeterReadings meterReadings) {
-        String smartMeterId = meterReadings.smartMeterId();
-        List<ElectricityReading> electricityReadings = meterReadings.electricityReadings();
-        return smartMeterId != null
-                && !smartMeterId.isEmpty()
-                && electricityReadings != null
-                && !electricityReadings.isEmpty();
+        return ResponseEntity.ok(CustomResponse.<String>builder()
+                .payload("Records created!!!")
+                .httpStatus(HttpStatus.CREATED)
+                .build());
     }
 
     @GetMapping("/read/{smartMeterId}")
-    public ResponseEntity readReadings(@PathVariable String smartMeterId) {
-        Optional<List<ElectricityReading>> readings = meterReadingService.getReadings(smartMeterId);
-        return readings.isPresent()
-                ? ResponseEntity.ok(readings.get())
-                : ResponseEntity.notFound().build();
+    public ResponseEntity<CustomResponse<List<ElectricityReading>>> readReadings(@PathVariable String smartMeterId) {
+        Optional<List<ElectricityReading>> readingsOptional = meterReadingService.getReadings(smartMeterId);
+        return readingsOptional
+                .map(electricityReadings -> ResponseEntity.ok(CustomResponse.<List<ElectricityReading>>builder()
+                        .payload(electricityReadings)
+                        .httpStatus(HttpStatus.OK)
+                        .build()))
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

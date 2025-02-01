@@ -27,12 +27,8 @@ public class PricePlanService {
             String smartMeterId) {
         Optional<List<ElectricityReading>> electricityReadings = meterReadingService.getReadings(smartMeterId);
 
-        if (!electricityReadings.isPresent()) {
-            return Optional.empty();
-        }
-
-        return Optional.of(pricePlans.stream()
-                .collect(Collectors.toMap(PricePlan::getPlanName, t -> calculateCost(electricityReadings.get(), t))));
+        return electricityReadings.map(readings ->
+                pricePlans.stream().collect(Collectors.toMap(PricePlan::getPlanName, t -> calculateCost(readings, t))));
     }
 
     private BigDecimal calculateCost(List<ElectricityReading> electricityReadings, PricePlan pricePlan) {
@@ -44,9 +40,8 @@ public class PricePlanService {
     }
 
     private BigDecimal calculateAverageReading(List<ElectricityReading> electricityReadings) {
-        BigDecimal summedReadings = electricityReadings.stream()
-                .map(ElectricityReading::reading)
-                .reduce(BigDecimal.ZERO, (reading, accumulator) -> reading.add(accumulator));
+        BigDecimal summedReadings =
+                electricityReadings.stream().map(ElectricityReading::reading).reduce(BigDecimal.ZERO, BigDecimal::add);
 
         return summedReadings.divide(BigDecimal.valueOf(electricityReadings.size()), RoundingMode.HALF_UP);
     }

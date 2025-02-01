@@ -2,7 +2,6 @@ package uk.tw.energy.controller;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +35,7 @@ public class PricePlanComparatorController {
         Optional<Map<String, BigDecimal>> consumptionsForPricePlans =
                 pricePlanService.getConsumptionCostOfElectricityReadingsForEachPricePlan(smartMeterId);
 
-        if (!consumptionsForPricePlans.isPresent()) {
+        if (consumptionsForPricePlans.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
@@ -44,9 +43,7 @@ public class PricePlanComparatorController {
         pricePlanComparisons.put(PRICE_PLAN_ID_KEY, pricePlanId);
         pricePlanComparisons.put(PRICE_PLAN_COMPARISONS_KEY, consumptionsForPricePlans.get());
 
-        return consumptionsForPricePlans.isPresent()
-                ? ResponseEntity.ok(pricePlanComparisons)
-                : ResponseEntity.notFound().build();
+        return ResponseEntity.ok(pricePlanComparisons);
     }
 
     @GetMapping("/recommend/{smartMeterId}")
@@ -55,13 +52,13 @@ public class PricePlanComparatorController {
         Optional<Map<String, BigDecimal>> consumptionsForPricePlans =
                 pricePlanService.getConsumptionCostOfElectricityReadingsForEachPricePlan(smartMeterId);
 
-        if (!consumptionsForPricePlans.isPresent()) {
+        if (consumptionsForPricePlans.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
         List<Map.Entry<String, BigDecimal>> recommendations =
                 new ArrayList<>(consumptionsForPricePlans.get().entrySet());
-        recommendations.sort(Comparator.comparing(Map.Entry::getValue));
+        recommendations.sort(Map.Entry.comparingByValue());
 
         if (limit != null && limit < recommendations.size()) {
             recommendations = recommendations.subList(0, limit);

@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import uk.tw.energy.builders.MeterReadingsBuilder;
+import uk.tw.energy.domain.CustomResponse;
 import uk.tw.energy.domain.ElectricityReading;
 import uk.tw.energy.domain.MeterReadings;
 
@@ -53,11 +54,19 @@ public class EndpointTest {
                 new ElectricityReading(Instant.parse("2024-04-26T00:00:30.00Z"), new BigDecimal(30)));
         populateReadingsForMeter(smartMeterId, data);
 
-        ResponseEntity<ElectricityReading[]> response =
-                restTemplate.getForEntity("/readings/read/" + smartMeterId, ElectricityReading[].class);
+        ResponseEntity<CustomResponse> response =
+                restTemplate.getForEntity("/readings/read/" + smartMeterId, CustomResponse.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(Arrays.asList(response.getBody())).isEqualTo(data);
+        List<ElectricityReading> payload = new ArrayList<>();
+        for (Object o : (List) response.getBody().getPayload()) {
+            Map<String, Object> reading = (Map) o;
+            payload.add(new ElectricityReading(
+                    Instant.parse((CharSequence) reading.get("time")),
+                    BigDecimal.valueOf(Long.parseLong(String.valueOf(reading.get("reading"))))));
+        }
+
+        assertThat(payload).isEqualTo(data);
     }
 
     @Test
