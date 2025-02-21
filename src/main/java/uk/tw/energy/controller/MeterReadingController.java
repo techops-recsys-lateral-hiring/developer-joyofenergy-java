@@ -14,6 +14,8 @@ import uk.tw.energy.domain.ElectricityReading;
 import uk.tw.energy.domain.MeterReadings;
 import uk.tw.energy.service.MeterReadingService;
 
+// comment
+
 @RestController
 @RequestMapping("/readings")
 public class MeterReadingController {
