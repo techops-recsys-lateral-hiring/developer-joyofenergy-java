@@ -40,7 +40,7 @@ These values are used in the code and in the following examples too.
 ## Requirements
 
 The project requires [Java 21](https://adoptium.net/en-GB/). If you have multiple JVMs on your machine, you might want to consider
-using a tool such as [sdkman](https://sdkman.io/) to handle switching between versions.
+using a tool such as [sdkman](https://sdkman.io/) or [mise](https://mise.jdx.dev/) (amongst others) to handle switching between versions.
 
 The project makes use of Gradle and uses the [Gradle wrapper](https://docs.gradle.org/current/userguide/gradle_wrapper.html), which means you don't need Gradle
 installed.
