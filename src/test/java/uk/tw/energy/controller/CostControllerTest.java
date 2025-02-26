@@ -5,6 +5,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.HashMap;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -44,9 +45,9 @@ public class CostControllerTest {
 
         ElectricityReading electricityReading1 = new ElectricityReading(now.minusSeconds(3600 * 48L), BigDecimal.valueOf(0.4802));
         ElectricityReading electricityReading2 = new ElectricityReading(now.minusSeconds(3600 * 24L), BigDecimal.valueOf(0.5002));
-List<ElectricityReading> meterReadings = List.of(electricityReading1, electricityReading2);
+        List<ElectricityReading> meterReadings = List.of(electricityReading1, electricityReading2);
 
-        meterReadingService.storeReadings(meterReadings.smartMeterId(), meterReadings.electricityReadings());
+        meterReadingService.storeReadings(SMART_METER_ID, meterReadings);
 
         assertThat(costController.getLastWeekCost(SMART_METER_ID).getStatusCode())
                 .isEqualTo(HttpStatus.OK);
