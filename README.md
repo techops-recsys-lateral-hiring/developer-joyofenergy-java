@@ -1,7 +1,7 @@
 # Welcome to PowerDale
 
 PowerDale is a small town with around 100 residents. Most houses have a smart meter installed that can save and send
-information about how much power a house is drawing/using.
+information about how much power a house is using at a given point in time.
 
 There are three major providers of energy in town that charge different amounts for the power they supply.
 
@@ -15,7 +15,7 @@ JOI Energy is a new start-up in the energy industry. Rather than selling energy 
 from the market by recording their customers' energy usage from their smart meters and recommending the best supplier to
 meet their needs.
 
-You have been placed into their development team, whose current goal is to produce an API which their customers and
+You have been placed into their development team, whose current goal it is to produce an API which their customers and
 smart meters will interact with.
 
 Unfortunately, two members of the team are on annual leave, and another one has called in sick! You are left with
@@ -39,20 +39,17 @@ These values are used in the code and in the following examples too.
 
 ## Requirements
 
-The project requires [Java 21](https://adoptium.net/en-GB/).
+The project requires [Java 21](https://adoptium.net/en-GB/). If you have multiple JVMs on your machine, you might want to consider
+using a tool such as [sdkman](https://sdkman.io/) or [mise](https://mise.jdx.dev/) (amongst others) to handle switching between versions.
 
-The project makes use of Gradle and uses
-the [Gradle wrapper](https://docs.gradle.org/current/userguide/gradle_wrapper.html), which means you don't need Gradle
+The project makes use of Gradle and uses the [Gradle wrapper](https://docs.gradle.org/current/userguide/gradle_wrapper.html), which means you don't need Gradle
 installed.
 
 ## Useful Gradle commands
 
-The project makes use of Gradle and uses the Gradle wrapper to help you out carrying some common tasks such as building
-the project or running it.
-
 ### List all Gradle tasks
 
-List all the tasks that Gradle can do, such as `build` and `test`.
+List all the tasks that Gradle can run, such as `build` and `test`.
 
 ```console
 $ ./gradlew tasks
@@ -67,7 +64,7 @@ $ ./gradlew build
 ```
 
 Run the application using Java and the executable JAR file produced by the Gradle `build` task. The application will be
-listening to port `8080`.
+listening on port `8080`.
 
 ```console
 $ java -jar build/libs/developer-joyofenergy-java.jar
@@ -133,30 +130,31 @@ Example of body
 
 Parameters
 
-| Parameter      | Description                                           |
-| -------------- | ----------------------------------------------------- |
-| `smartMeterId` | One of the smart meters' id listed above              |
-| `time`         | The date/time (as epoch) when the _reading_ was taken |
-| `reading`      | The consumption in `kW` at the _time_ of the reading  |
+| Parameter      | Description                                                    |
+|----------------|----------------------------------------------------------------|
+| `smartMeterId` | One of the smart meters ids listed above.                      |
+| `time`         | The date/time (as epoch seconds) when the _reading_ was taken. |
+| `reading`      | The power consumption in `kW` at the _time_ of the reading.    |
 
 Example readings
 
-| Date (`GMT`)      | Epoch timestamp | Reading (`kW`) |
-| ----------------- | --------------: | -------------: |
-| `2020-11-29 8:00` |      1606636800 |         0.0503 |
-| `2020-11-29 8:01` |      1606636860 |         0.0621 |
-| `2020-11-29 8:02` |      1606636920 |         0.0222 |
-| `2020-11-29 8:03` |      1606636980 |         0.0423 |
-| `2020-11-29 8:04` |      1606637040 |         0.0191 |
+| Date & Time (`GMT/UTC`) | Epoch timestamp (seconds) | Power Reading (`kW`) |
+|-------------------------|---------------------------|----------------------|
+| `2020-11-29 8:00`       | 1606636800                | 0.0503               |
+| `2020-11-29 8:01`       | 1606636860                | 0.0621               |
+| `2020-11-29 8:02`       | 1606636920                | 0.0222               |
+| `2020-11-29 8:03`       | 1606636980                | 0.0423               |
+| `2020-11-29 8:04`       | 1606637040                | 0.0191               |
 
-In the above example, the smart meter sampled readings, in `kW`, every minute. Note that the reading is in `kW` and
-not `kWH`, which means that each reading represents the consumption at the reading time. If no power is being consumed
+In the above example, the smart meter sampled power readings, in `kW`, every minute. Note that the reading is in `kW` and
+not `kWH`, which means that each reading represents the _power_ consumption at the reading time. If no power is being consumed
 at the time of reading, then the reading value will be `0`. Given that `0` may introduce new challenges, we can assume
 that there is always some consumption, and we will never have a `0` reading value. These readings are then sent by the
-smart meter to the application using REST. There is a service in the application that calculates the `kWH` from these
-readings.
+smart meter to the application using the HTTP API. 
 
-The following POST request, is an example request using CURL, sends the readings shown in the table above.
+There is a service in the application that calculates the energy used in `kWH` from these power readings over time.
+
+The following POST request, is an example request using `curl`, sends the readings shown in the table above.
 
 ```console
 $ curl \
@@ -166,29 +164,29 @@ $ curl \
   -d '{"smartMeterId":"smart-meter-0","electricityReadings":[{"time":1606636800,"reading":0.0503},{"time":1606636860,"reading":0.0621},{"time":1606636920,"reading":0.0222},{"time":1606636980,"reading":0.0423},{"time":1606637040,"reading":0.0191}]}'
 ```
 
-The above command does not return anything.
+The above command does not return anything beyond the HTTP 200 status.
 
 ### Get Stored Readings
 
-Endpoint
+Endpoint:
 
 ```text
 GET /readings/read/<smartMeterId>
 ```
 
-Parameters
+Parameters:
 
 | Parameter      | Description                              |
-| -------------- | ---------------------------------------- |
-| `smartMeterId` | One of the smart meters' id listed above |
+| -------------- |------------------------------------------|
+| `smartMeterId` | One of the smart meter ids listed above. |
 
-Retrieving readings using CURL
+Retrieving readings using `curl`:
 
 ```console
 $ curl "http://localhost:8080/readings/read/smart-meter-0"
 ```
 
-Example output
+Example output:
 
 ```json
 [
@@ -226,16 +224,16 @@ GET /price-plans/compare-all/<smartMeterId>
 Parameters
 
 | Parameter      | Description                              |
-| -------------- | ---------------------------------------- |
-| `smartMeterId` | One of the smart meters' id listed above |
+|----------------|------------------------------------------|
+| `smartMeterId` | One of the smart meter ids listed above. |
 
-Retrieving readings using CURL
+Retrieving readings using `curl`:
 
 ```console
 $ curl "http://localhost:8080/price-plans/compare-all/smart-meter-0"
 ```
 
-Example output
+Example output:
 
 ```json
 {
@@ -250,7 +248,7 @@ Example output
 
 ### View Recommended Price Plans for Usage
 
-Endpoint
+Endpoint:
 
 ```text
 GET /price-plans/recommend/<smartMeterId>[?limit=<limit>]
@@ -258,18 +256,18 @@ GET /price-plans/recommend/<smartMeterId>[?limit=<limit>]
 
 Parameters
 
-| Parameter      | Description                                          |
-| -------------- | ---------------------------------------------------- |
-| `smartMeterId` | One of the smart meters' id listed above             |
-| `limit`        | (Optional) limit the number of plans to be displayed |
+| Parameter      | Description                                           |
+| -------------- |-------------------------------------------------------|
+| `smartMeterId` | One of the smart meters ids listed above.             |
+| `limit`        | (Optional) limit the number of plans to be displayed. |
 
-Retrieving readings using CURL
+Retrieving readings using `curl`:
 
 ```console
 $ curl "http://localhost:8080/price-plans/recommend/smart-meter-0?limit=2"
 ```
 
-Example output
+Example output:
 
 ```json
 [
