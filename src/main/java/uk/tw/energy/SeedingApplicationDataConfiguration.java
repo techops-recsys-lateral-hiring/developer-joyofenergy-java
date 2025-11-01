@@ -17,6 +17,7 @@ import uk.tw.energy.domain.ElectricityReading;
 import uk.tw.energy.domain.PricePlan;
 import uk.tw.energy.generator.ElectricityReadingsGenerator;
 
+@SuppressWarnings("unused")
 @Configuration
 public class SeedingApplicationDataConfiguration {
 
