@@ -1,4 +1,4 @@
-#/usr/bin/env bash
+#!/usr/bin/env bash
 #
 # Execute basic checks on the application
 #
@@ -18,7 +18,7 @@ tmp_dir="/tmp/joe"
 # ----------------------------
 
 fail() {
-  echo $*
+  echo $$*
   exit 1
 }
 
@@ -74,7 +74,7 @@ sh -c "$run_command" > "$tmp_dir/server.log" &
 run_pid=$!
 
 # kill the server when the script exits
-trap "kill $run_pid" exit
+trap 'kill $run_pid' exit
 
 # wait for the server to be up
 max_wait=10
